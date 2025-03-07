@@ -423,6 +423,18 @@ app.state.config = AppConfig()
 app.state.WEBUI_NAME = WEBUI_NAME
 app.state.LICENSE_METADATA = None
 
+
+
+# import debugpy
+
+# # # # 设置调试服务器的监听地址和端口
+# debugpy.listen(("0.0.0.0", 5678))
+
+# print("Waiting for debugger attach...")
+# # 等待调试器附加
+# debugpy.wait_for_client()
+# print("Debugger attached")
+
 ########################################
 #
 # OLLAMA
@@ -853,7 +865,6 @@ async def inspect_websocket(request: Request, call_next):
             )
     return await call_next(request)
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ALLOW_ORIGIN,
@@ -861,7 +872,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+print('#' * 100)
+print(CORS_ALLOW_ORIGIN)
+print('#' * 100)
 
 app.mount("/ws", socket_app)
 

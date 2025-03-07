@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
+export HF_HUB_OFFLINE=1
+export CUSTOM_NAME="HuatuoNV"
+export WEBUI_NAME="HuatuoNV"
+export WEBUI_URL="https://huatuo.cn"
+
+export PORT=18080
+export ENABLE_SIGNUP=true
+export ENABLE_OLLAMA_API=false
+export OPENAI_API_BASE_URL=https://api.ai-gaochao.cn/v1
+export OPENAI_API_KEY=sk-EbmyJfdUsVcRqqFL5687643852Fc4002A9Da92D385CeA460
+export ENABLE_EVALUATION_ARENA_MODELS=false
+export HF_ENDPOINT=https://hf-mirror.com
+
+
+
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR" || exit
-export HF_ENDPOINT=https://hf-mirror.com
-export PORT=18080
-export OPENAI_API_BASE_URL='https://api.ai-gaochao.cn/v1'
-export OPENAI_API_KEY='sk-EbmyJfdUsVcRqqFL5687643852Fc4002A9Da92D385CeA460'
-# anon2010   1234qwer
-export CORS_ALLOW_ORIGIN='http://localhost:5173;http://localhost:8080;http://10.20.13.1:5173'
-
 
 # Add conditional Playwright browser installation
 if [[ "${RAG_WEB_LOADER_ENGINE,,}" == "playwright" ]]; then
