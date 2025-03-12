@@ -20,11 +20,7 @@ class QdrantClient:
         self.collection_prefix = "open-webui"
         self.QDRANT_URI = QDRANT_URI
         self.QDRANT_API_KEY = QDRANT_API_KEY
-        self.client = (
-            Qclient(url=self.QDRANT_URI, api_key=self.QDRANT_API_KEY)
-            if self.QDRANT_URI
-            else None
-        )
+        self.client = Qclient(url=self.QDRANT_URI, api_key=self.QDRANT_API_KEY) if self.QDRANT_URI else None
 
     def _result_to_get_result(self, points) -> GetResult:
         ids = []
@@ -49,18 +45,14 @@ class QdrantClient:
         collection_name_with_prefix = f"{self.collection_prefix}_{collection_name}"
         self.client.create_collection(
             collection_name=collection_name_with_prefix,
-            vectors_config=models.VectorParams(
-                size=dimension, distance=models.Distance.COSINE
-            ),
+            vectors_config=models.VectorParams(size=dimension, distance=models.Distance.COSINE),
         )
 
         log.info(f"collection {collection_name_with_prefix} successfully created!")
 
     def _create_collection_if_not_exists(self, collection_name, dimension):
         if not self.has_collection(collection_name=collection_name):
-            self._create_collection(
-                collection_name=collection_name, dimension=dimension
-            )
+            self._create_collection(collection_name=collection_name, dimension=dimension)
 
     def _create_points(self, items: list[VectorItem]):
         return [
@@ -73,18 +65,12 @@ class QdrantClient:
         ]
 
     def has_collection(self, collection_name: str) -> bool:
-        return self.client.collection_exists(
-            f"{self.collection_prefix}_{collection_name}"
-        )
+        return self.client.collection_exists(f"{self.collection_prefix}_{collection_name}")
 
     def delete_collection(self, collection_name: str):
-        return self.client.delete_collection(
-            collection_name=f"{self.collection_prefix}_{collection_name}"
-        )
+        return self.client.delete_collection(collection_name=f"{self.collection_prefix}_{collection_name}")
 
-    def search(
-        self, collection_name: str, vectors: list[list[float | int]], limit: int
-    ) -> Optional[SearchResult]:
+    def search(self, collection_name: str, vectors: list[list[float | int]], limit: int) -> Optional[SearchResult]:
         # Search for the nearest neighbor items based on the vectors and return 'limit' number of results.
         if limit is None:
             limit = NO_LIMIT  # otherwise qdrant would set limit to 10!
@@ -113,9 +99,7 @@ class QdrantClient:
             field_conditions = []
             for key, value in filter.items():
                 field_conditions.append(
-                    models.FieldCondition(
-                        key=f"metadata.{key}", match=models.MatchValue(value=value)
-                    )
+                    models.FieldCondition(key=f"metadata.{key}", match=models.MatchValue(value=value))
                 )
 
             points = self.client.query_points(
@@ -176,9 +160,7 @@ class QdrantClient:
 
         return self.client.delete(
             collection_name=f"{self.collection_prefix}_{collection_name}",
-            points_selector=models.FilterSelector(
-                filter=models.Filter(must=field_conditions)
-            ),
+            points_selector=models.FilterSelector(filter=models.Filter(must=field_conditions)),
         )
 
     def reset(self):

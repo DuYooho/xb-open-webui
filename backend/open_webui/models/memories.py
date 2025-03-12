@@ -70,9 +70,7 @@ class MemoriesTable:
     ) -> Optional[MemoryModel]:
         with get_db() as db:
             try:
-                db.query(Memory).filter_by(id=id).update(
-                    {"content": content, "updated_at": int(time.time())}
-                )
+                db.query(Memory).filter_by(id=id).update({"content": content, "updated_at": int(time.time())})
                 db.commit()
                 return self.get_memory_by_id(id)
             except Exception:

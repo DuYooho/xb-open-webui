@@ -34,9 +34,7 @@ router = APIRouter()
 
 @router.get("/", response_model=list[ChatTitleIdResponse])
 @router.get("/list", response_model=list[ChatTitleIdResponse])
-async def get_session_user_chat_list(
-    user=Depends(get_verified_user), page: Optional[int] = None
-):
+async def get_session_user_chat_list(user=Depends(get_verified_user), page: Optional[int] = None):
     if page is not None:
         limit = 60
         skip = (page - 1) * limit
@@ -54,9 +52,7 @@ async def get_session_user_chat_list(
 @router.delete("/", response_model=bool)
 async def delete_all_user_chats(request: Request, user=Depends(get_verified_user)):
 
-    if user.role == "user" and not has_permission(
-        user.id, "chat.delete", request.app.state.config.USER_PERMISSIONS
-    ):
+    if user.role == "user" and not has_permission(user.id, "chat.delete", request.app.state.config.USER_PERMISSIONS):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
@@ -83,9 +79,7 @@ async def get_user_chat_list_by_user_id(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
         )
-    return Chats.get_chat_list_by_user_id(
-        user_id, include_archived=True, skip=skip, limit=limit
-    )
+    return Chats.get_chat_list_by_user_id(user_id, include_archived=True, skip=skip, limit=limit)
 
 
 ############################
@@ -100,9 +94,7 @@ async def create_new_chat(form_data: ChatForm, user=Depends(get_verified_user)):
         return ChatResponse(**chat.model_dump())
     except Exception as e:
         log.exception(e)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -119,18 +111,13 @@ async def import_chat(form_data: ChatImportForm, user=Depends(get_verified_user)
             for tag_id in tags:
                 tag_id = tag_id.replace(" ", "_").lower()
                 tag_name = " ".join([word.capitalize() for word in tag_id.split("_")])
-                if (
-                    tag_id != "none"
-                    and Tags.get_tag_by_name_and_user_id(tag_name, user.id) is None
-                ):
+                if tag_id != "none" and Tags.get_tag_by_name_and_user_id(tag_name, user.id) is None:
                     Tags.insert_new_tag(tag_name, user.id)
 
         return ChatResponse(**chat.model_dump())
     except Exception as e:
         log.exception(e)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -139,9 +126,7 @@ async def import_chat(form_data: ChatImportForm, user=Depends(get_verified_user)
 
 
 @router.get("/search", response_model=list[ChatTitleIdResponse])
-async def search_user_chats(
-    text: str, page: Optional[int] = None, user=Depends(get_verified_user)
-):
+async def search_user_chats(text: str, page: Optional[int] = None, user=Depends(get_verified_user)):
     if page is None:
         page = 1
 
@@ -150,9 +135,7 @@ async def search_user_chats(
 
     chat_list = [
         ChatTitleIdResponse(**chat.model_dump())
-        for chat in Chats.get_chats_by_user_id_and_search_text(
-            user.id, text, skip=skip, limit=limit
-        )
+        for chat in Chats.get_chats_by_user_id_and_search_text(user.id, text, skip=skip, limit=limit)
     ]
 
     # Delete tag if no chat is found
@@ -175,15 +158,12 @@ async def search_user_chats(
 @router.get("/folder/{folder_id}", response_model=list[ChatResponse])
 async def get_chats_by_folder_id(folder_id: str, user=Depends(get_verified_user)):
     folder_ids = [folder_id]
-    children_folders = Folders.get_children_folders_by_id_and_user_id(
-        folder_id, user.id
-    )
+    children_folders = Folders.get_children_folders_by_id_and_user_id(folder_id, user.id)
     if children_folders:
         folder_ids.extend([folder.id for folder in children_folders])
 
     return [
-        ChatResponse(**chat.model_dump())
-        for chat in Chats.get_chats_by_folder_ids_and_user_id(folder_ids, user.id)
+        ChatResponse(**chat.model_dump()) for chat in Chats.get_chats_by_folder_ids_and_user_id(folder_ids, user.id)
     ]
 
 
@@ -194,10 +174,7 @@ async def get_chats_by_folder_id(folder_id: str, user=Depends(get_verified_user)
 
 @router.get("/pinned", response_model=list[ChatResponse])
 async def get_user_pinned_chats(user=Depends(get_verified_user)):
-    return [
-        ChatResponse(**chat.model_dump())
-        for chat in Chats.get_pinned_chats_by_user_id(user.id)
-    ]
+    return [ChatResponse(**chat.model_dump()) for chat in Chats.get_pinned_chats_by_user_id(user.id)]
 
 
 ############################
@@ -207,10 +184,7 @@ async def get_user_pinned_chats(user=Depends(get_verified_user)):
 
 @router.get("/all", response_model=list[ChatResponse])
 async def get_user_chats(user=Depends(get_verified_user)):
-    return [
-        ChatResponse(**chat.model_dump())
-        for chat in Chats.get_chats_by_user_id(user.id)
-    ]
+    return [ChatResponse(**chat.model_dump()) for chat in Chats.get_chats_by_user_id(user.id)]
 
 
 ############################
@@ -220,10 +194,7 @@ async def get_user_chats(user=Depends(get_verified_user)):
 
 @router.get("/all/archived", response_model=list[ChatResponse])
 async def get_user_archived_chats(user=Depends(get_verified_user)):
-    return [
-        ChatResponse(**chat.model_dump())
-        for chat in Chats.get_archived_chats_by_user_id(user.id)
-    ]
+    return [ChatResponse(**chat.model_dump()) for chat in Chats.get_archived_chats_by_user_id(user.id)]
 
 
 ############################
@@ -238,9 +209,7 @@ async def get_all_user_tags(user=Depends(get_verified_user)):
         return tags
     except Exception as e:
         log.exception(e)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -264,9 +233,7 @@ async def get_all_user_chats_in_db(user=Depends(get_admin_user)):
 
 
 @router.get("/archived", response_model=list[ChatTitleIdResponse])
-async def get_archived_session_user_chat_list(
-    user=Depends(get_verified_user), skip: int = 0, limit: int = 50
-):
+async def get_archived_session_user_chat_list(user=Depends(get_verified_user), skip: int = 0, limit: int = 50):
     return Chats.get_archived_chat_list_by_user_id(user.id, skip, limit)
 
 
@@ -288,9 +255,7 @@ async def archive_all_chats(user=Depends(get_verified_user)):
 @router.get("/share/{share_id}", response_model=Optional[ChatResponse])
 async def get_shared_chat_by_id(share_id: str, user=Depends(get_verified_user)):
     if user.role == "pending":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
 
     if user.role == "user" or (user.role == "admin" and not ENABLE_ADMIN_CHAT_ACCESS):
         chat = Chats.get_chat_by_share_id(share_id)
@@ -301,9 +266,7 @@ async def get_shared_chat_by_id(share_id: str, user=Depends(get_verified_user)):
         return ChatResponse(**chat.model_dump())
 
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
 
 
 ############################
@@ -321,12 +284,8 @@ class TagFilterForm(TagForm):
 
 
 @router.post("/tags", response_model=list[ChatTitleIdResponse])
-async def get_user_chat_list_by_tag_name(
-    form_data: TagFilterForm, user=Depends(get_verified_user)
-):
-    chats = Chats.get_chat_list_by_user_id_and_tag_name(
-        user.id, form_data.name, form_data.skip, form_data.limit
-    )
+async def get_user_chat_list_by_tag_name(form_data: TagFilterForm, user=Depends(get_verified_user)):
+    chats = Chats.get_chat_list_by_user_id_and_tag_name(user.id, form_data.name, form_data.skip, form_data.limit)
     if len(chats) == 0:
         Tags.delete_tag_by_name_and_user_id(form_data.name, user.id)
 
@@ -346,9 +305,7 @@ async def get_chat_by_id(id: str, user=Depends(get_verified_user)):
         return ChatResponse(**chat.model_dump())
 
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
 
 
 ############################
@@ -357,9 +314,7 @@ async def get_chat_by_id(id: str, user=Depends(get_verified_user)):
 
 
 @router.post("/{id}", response_model=Optional[ChatResponse])
-async def update_chat_by_id(
-    id: str, form_data: ChatForm, user=Depends(get_verified_user)
-):
+async def update_chat_by_id(id: str, form_data: ChatForm, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
         updated_chat = {**chat.chat, **form_data.chat}
@@ -389,9 +344,7 @@ async def delete_chat_by_id(request: Request, id: str, user=Depends(get_verified
 
         return result
     else:
-        if not has_permission(
-            user.id, "chat.delete", request.app.state.config.USER_PERMISSIONS
-        ):
+        if not has_permission(user.id, "chat.delete", request.app.state.config.USER_PERMISSIONS):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
@@ -417,9 +370,7 @@ async def get_pinned_status_by_id(id: str, user=Depends(get_verified_user)):
     if chat:
         return chat.pinned
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -434,9 +385,7 @@ async def pin_chat_by_id(id: str, user=Depends(get_verified_user)):
         chat = Chats.toggle_chat_pinned_by_id(id)
         return chat
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -449,9 +398,7 @@ class CloneForm(BaseModel):
 
 
 @router.post("/{id}/clone", response_model=Optional[ChatResponse])
-async def clone_chat_by_id(
-    form_data: CloneForm, id: str, user=Depends(get_verified_user)
-):
+async def clone_chat_by_id(form_data: CloneForm, id: str, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
         updated_chat = {
@@ -464,9 +411,7 @@ async def clone_chat_by_id(
         chat = Chats.insert_new_chat(user.id, ChatForm(**{"chat": updated_chat}))
         return ChatResponse(**chat.model_dump())
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -488,9 +433,7 @@ async def clone_shared_chat_by_id(id: str, user=Depends(get_verified_user)):
         chat = Chats.insert_new_chat(user.id, ChatForm(**{"chat": updated_chat}))
         return ChatResponse(**chat.model_dump())
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -519,9 +462,7 @@ async def archive_chat_by_id(id: str, user=Depends(get_verified_user)):
 
         return ChatResponse(**chat.model_dump())
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -585,19 +526,13 @@ class ChatFolderIdForm(BaseModel):
 
 
 @router.post("/{id}/folder", response_model=Optional[ChatResponse])
-async def update_chat_folder_id_by_id(
-    id: str, form_data: ChatFolderIdForm, user=Depends(get_verified_user)
-):
+async def update_chat_folder_id_by_id(id: str, form_data: ChatFolderIdForm, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
-        chat = Chats.update_chat_folder_id_by_id_and_user_id(
-            id, user.id, form_data.folder_id
-        )
+        chat = Chats.update_chat_folder_id_by_id_and_user_id(id, user.id, form_data.folder_id)
         return ChatResponse(**chat.model_dump())
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -612,9 +547,7 @@ async def get_chat_tags_by_id(id: str, user=Depends(get_verified_user)):
         tags = chat.meta.get("tags", [])
         return Tags.get_tags_by_ids_and_user_id(tags, user.id)
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
 
 
 ############################
@@ -623,9 +556,7 @@ async def get_chat_tags_by_id(id: str, user=Depends(get_verified_user)):
 
 
 @router.post("/{id}/tags", response_model=list[TagModel])
-async def add_tag_by_id_and_tag_name(
-    id: str, form_data: TagForm, user=Depends(get_verified_user)
-):
+async def add_tag_by_id_and_tag_name(id: str, form_data: TagForm, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
         tags = chat.meta.get("tags", [])
@@ -638,17 +569,13 @@ async def add_tag_by_id_and_tag_name(
             )
 
         if tag_id not in tags:
-            Chats.add_chat_tag_by_id_and_user_id_and_tag_name(
-                id, user.id, form_data.name
-            )
+            Chats.add_chat_tag_by_id_and_user_id_and_tag_name(id, user.id, form_data.name)
 
         chat = Chats.get_chat_by_id_and_user_id(id, user.id)
         tags = chat.meta.get("tags", [])
         return Tags.get_tags_by_ids_and_user_id(tags, user.id)
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT()
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.DEFAULT())
 
 
 ############################
@@ -657,9 +584,7 @@ async def add_tag_by_id_and_tag_name(
 
 
 @router.delete("/{id}/tags", response_model=list[TagModel])
-async def delete_tag_by_id_and_tag_name(
-    id: str, form_data: TagForm, user=Depends(get_verified_user)
-):
+async def delete_tag_by_id_and_tag_name(id: str, form_data: TagForm, user=Depends(get_verified_user)):
     chat = Chats.get_chat_by_id_and_user_id(id, user.id)
     if chat:
         Chats.delete_tag_by_id_and_user_id_and_tag_name(id, user.id, form_data.name)
@@ -671,9 +596,7 @@ async def delete_tag_by_id_and_tag_name(
         tags = chat.meta.get("tags", [])
         return Tags.get_tags_by_ids_and_user_id(tags, user.id)
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
 
 
 ############################
@@ -693,6 +616,4 @@ async def delete_all_tags_by_id(id: str, user=Depends(get_verified_user)):
 
         return True
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=ERROR_MESSAGES.NOT_FOUND)
