@@ -3,7 +3,14 @@ import { browser, dev } from '$app/environment';
 
 export const APP_NAME = 'HuatuoGPT';
 
-export const WEBUI_HOSTNAME = browser ? (dev ? `${location.hostname}:18080` : ``) : '';
+// Normal mode
+// export const WEBUI_HOSTNAME = browser ? (dev ? `${location.hostname}:18080` : ``) : '';
+// export const MODE_TYPE = 'normal';
+// Guest mode
+export const WEBUI_HOSTNAME = browser ? (dev ? `${location.hostname}:12138` : ``) : '';
+export const MODE_TYPE = 'guest';
+
+
 export const WEBUI_BASE_URL = browser ? (dev ? `http://${WEBUI_HOSTNAME}` : ``) : ``;
 export const WEBUI_API_BASE_URL = `${WEBUI_BASE_URL}/api/v1`;
 

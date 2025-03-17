@@ -38,6 +38,8 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+from starlette.types import Scope, Send, Receive
 
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -327,6 +329,7 @@ from open_webui.env import (
     BYPASS_MODEL_ACCESS_CONTROL,
     RESET_CONFIG_ON_START,
     OFFLINE_MODE,
+    GUEST_ENABLE_MODEL
 )
 
 
@@ -425,15 +428,15 @@ app.state.LICENSE_METADATA = None
 
 
 
-# import debugpy
+import debugpy
 
-# # # # 设置调试服务器的监听地址和端口
-# debugpy.listen(("0.0.0.0", 5678))
+# # # 设置调试服务器的监听地址和端口
+debugpy.listen(("0.0.0.0", 5678))
 
-# print("Waiting for debugger attach...")
-# # 等待调试器附加
-# debugpy.wait_for_client()
-# print("Debugger attached")
+print("Waiting for debugger attach...")
+# 等待调试器附加
+debugpy.wait_for_client()
+print("Debugger attached")
 
 ########################################
 #
@@ -976,9 +979,13 @@ async def get_models(request: Request, user=Depends(get_verified_user)):
         models.sort(
             key=lambda x: (model_order_dict.get(x["id"], float("inf")), x["name"])
         )
+    
 
-    # Filter out models that the user does not have access to
-    if user.role == "user" and not BYPASS_MODEL_ACCESS_CONTROL:
+    if GUEST_ENABLE_MODEL and user.name.startswith('Guest'):
+        guest_can_use_models = GUEST_ENABLE_MODEL.split(';')
+        models = [model for model in models if model['id'] in guest_can_use_models]
+
+    elif user.role == "user" and not BYPASS_MODEL_ACCESS_CONTROL:
         models = get_filtered_models(models, user)
 
     log.debug(
@@ -1015,7 +1022,11 @@ async def chat_completion(
             model_info = Models.get_model_by_id(model_id)
 
             # Check if user has access to the model
-            if not BYPASS_MODEL_ACCESS_CONTROL and user.role == "user":
+
+            if GUEST_ENABLE_MODEL and user.name.startswith('Guest'):
+                if model_id not in GUEST_ENABLE_MODEL.split(';'):
+                    raise Exception("Model not found")
+            elif not BYPASS_MODEL_ACCESS_CONTROL and user.role == "user":
                 try:
                     check_model_access(user, model)
                 except Exception as e:
@@ -1383,8 +1394,24 @@ async def healthcheck_with_db():
     return {"status": True}
 
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-app.mount("/cache", StaticFiles(directory=CACHE_DIR), name="cache")
+class CORSStaticFiles(StaticFiles):
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] == "http":
+            async def cors_send(message):
+                if message["type"] == "http.response.start":
+                    headers = dict(message.get("headers", []))
+                    headers[b"access-control-allow-origin"] = b"*"
+                    headers[b"access-control-allow-methods"] = b"GET, HEAD, POST, OPTIONS"
+                    headers[b"access-control-allow-headers"] = b"*"
+                    message["headers"] = [(k, v) for k, v in headers.items()]
+                await send(message)
+            await super().__call__(scope, receive, cors_send)
+        else:
+            await super().__call__(scope, receive, send)
+
+
+app.mount("/static", CORSStaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/cache", CORSStaticFiles(directory=CACHE_DIR), name="cache")
 
 
 def swagger_ui_html(*args, **kwargs):

@@ -1,0 +1,11 @@
+services:
+  
+  format-server_cluster_nginx:
+    image: nginx:latest
+    restart: always
+    
+    ports:
+      - 12138:12138
+    volumes:
+      - /home/wuxiangbo/workspace/open-webui/nginx_for_test_env/nginx.conf:/etc/nginx/nginx.conf:ro
+    

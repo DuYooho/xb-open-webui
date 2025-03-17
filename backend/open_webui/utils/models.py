@@ -21,7 +21,7 @@ from open_webui.config import (
     DEFAULT_ARENA_MODEL,
 )
 
-from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL
+from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL,GUEST_ENABLE_MODEL
 from open_webui.models.users import UserModel
 
 
@@ -224,15 +224,19 @@ async def get_all_models(request, user: UserModel = None):
 
 
 def check_model_access(user, model):
-    if model.get("arena"):
-        if not has_access(
+
+    if user.name.startswith('Guest'):
+        if model.get("id") not in GUEST_ENABLE_MODEL.split(';'):
+            raise Exception("Model not found")
+    elif model.get("arena"):
+            if not has_access(
             user.id,
             type="read",
             access_control=model.get("info", {})
             .get("meta", {})
             .get("access_control", {}),
-        ):
-            raise Exception("Model not found")
+            ):
+                raise Exception("Model not found")
     else:
         model_info = Models.get_model_by_id(model.get("id"))
         if not model_info:
