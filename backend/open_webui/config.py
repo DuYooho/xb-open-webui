@@ -981,6 +981,12 @@ USER_PERMISSIONS_FEATURES_CODE_INTERPRETER = (
 )
 
 
+USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE = (
+    os.environ.get("USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE", "True").lower()
+    == "true"
+)
+
+
 DEFAULT_USER_PERMISSIONS = {
     "workspace": {
         "models": USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS,
@@ -999,6 +1005,7 @@ DEFAULT_USER_PERMISSIONS = {
         "web_search": USER_PERMISSIONS_FEATURES_WEB_SEARCH,
         "image_generation": USER_PERMISSIONS_FEATURES_IMAGE_GENERATION,
         "code_interpreter": USER_PERMISSIONS_FEATURES_CODE_INTERPRETER,
+        "knowledge_base": USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE,
     },
 }
 
@@ -1430,6 +1437,12 @@ ENABLE_CODE_INTERPRETER = PersistentConfig(
     "ENABLE_CODE_INTERPRETER",
     "code_interpreter.enable",
     os.environ.get("ENABLE_CODE_INTERPRETER", "True").lower() == "true",
+)
+
+ENABLE_KNOWLEDGE_BASE = PersistentConfig(
+    "ENABLE_KNOWLEDGE_BASE",
+    "knowledge_base.enable",
+    os.environ.get("ENABLE_KNOWLEDGE_BASE", "True").lower() == "true",
 )
 
 CODE_INTERPRETER_ENGINE = PersistentConfig(

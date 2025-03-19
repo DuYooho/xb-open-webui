@@ -334,7 +334,7 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
     log.info(f"WEBUI_AUTH_TRUSTED_EMAIL_HEADER: {WEBUI_AUTH_TRUSTED_EMAIL_HEADER}")
 
 
-    if ENABLE_AUTO_AUTH == True and (WEBUI_AUTH_TRUSTED_EMAIL_HEADER in request.headers) and not form_data.email and not form_data.password:
+    if ENABLE_AUTO_AUTH == True and (WEBUI_AUTH_TRUSTED_EMAIL_HEADER and WEBUI_AUTH_TRUSTED_EMAIL_HEADER in request.headers) and not form_data.email and not form_data.password:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
         

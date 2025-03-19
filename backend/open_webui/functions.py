@@ -201,7 +201,8 @@ async def generate_function_chat_completion(
     model_info = Models.get_model_by_id(model_id)
 
     metadata = form_data.pop("metadata", {})
-
+    # MARK 将metadata中的features添加到form_data中
+    form_data['features'] = metadata.get("features", {})
     files = metadata.get("files", [])
     tool_ids = metadata.get("tool_ids", [])
     # Check if tool_ids is None

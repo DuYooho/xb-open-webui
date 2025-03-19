@@ -39,7 +39,8 @@
 		console.log('设置用户信息');
 		if (sessionUser) {
 			console.log(sessionUser);
-			toast.success($i18n.t(sessionUser.role === 'admin' ? '认证用户登录.' : '访客登录.'));
+			// toast.success($i18n.t(sessionUser.role === 'admin' ? '认证用户登录.' : '访客登录.'));
+			toast.success($i18n.t(sessionUser.role === 'admin' ? '欢迎管理员登录.' : '欢迎登录.'));
 			if (sessionUser.token) {
 				localStorage.token = sessionUser.token;
 			}
@@ -244,8 +245,8 @@
 					<img
 						id="logo"
 						crossorigin="anonymous"
-						src="{WEBUI_BASE_URL}/static/splash.png"
-						class=" w-6 rounded-full"
+						src="{WEBUI_BASE_URL}/static/splash-long.png"
+						class="h-10 rounded-full"
 						alt="logo"
 					/>
 				</div>
@@ -385,15 +386,15 @@
 										{#if $config?.features.enable_signup && !($config?.onboarding ?? false)}
 											<div class=" mt-4 text-sm text-center">
 												<!-- 暂不开放自主注册 -->
-												<!-- {mode === 'signin'
-													? $i18n.t("Don't have an account?")
-													: $i18n.t('Already have an account?')} -->
-												
 												{mode === 'signin'
-													? $i18n.t("😭Self-registration is not open yet")
+													? $i18n.t("Don't have an account?")
 													: $i18n.t('Already have an account?')}
+												
+												<!-- {mode === 'signin'
+													? $i18n.t("😭Self-registration is not open yet")
+													: $i18n.t('Already have an account?')} -->
 
-												<!-- <button
+												<button
 													class=" font-medium underline"
 													type="button"
 													on:click={() => {
@@ -405,7 +406,7 @@
 													}}
 												>
 													{mode === 'signin' ? $i18n.t('Sign up') : $i18n.t('Sign in')}
-												</button> -->
+												</button>
 											</div>
 										{/if}
 									{/if}

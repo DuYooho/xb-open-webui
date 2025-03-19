@@ -270,6 +270,7 @@ export const userSignIn = async (email: string, password: string) => {
 		})
 	})
 		.then(async (res) => {
+			console.log('登录响应:', res);
 			if (!res.ok) {
 				statusCode = res.status;
 				throw await res.json();

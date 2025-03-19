@@ -9,15 +9,17 @@ export OPENAI_API_KEY='sk-EbmyJfdUsVcRqqFL5687643852Fc4002A9Da92D385CeA460'
 # anon2010   1234qwer
 export CORS_ALLOW_ORIGIN='http://localhost:5173;http://localhost:18080;http://localhost:12138;http://10.20.13.1:5173;http://10.20.13.1:18080;http://10.20.13.1:12138'
 
+# export CUSTOM_NAME="CSEI-GPT"
+export WEBUI_NAME="CSEI-GPT"
 
 # 访客模式配置
 export WEBUI_AUTH=true
 export ENABLE_SIGNUP=true
 export ENABLE_AUTO_AUTH=true
-export AUTH_TRUSTED_EMAIL_HEADER=true
-export WEBUI_AUTH_TRUSTED_EMAIL_HEADER=X-User-Email
-export WEBUI_AUTH_TRUSTED_NAME_HEADER=X-User-Name
-export GUEST_ENABLE_MODEL='gpt-4o-mini;gpt-4o;gpt-3.5-turbo'
+# export AUTH_TRUSTED_EMAIL_HEADER=true
+# export WEBUI_AUTH_TRUSTED_EMAIL_HEADER=X-User-Email
+# export WEBUI_AUTH_TRUSTED_NAME_HEADER=X-User-Name
+# export GUEST_ENABLE_MODEL='gpt-4o-mini;gpt-4o;gpt-3.5-turbo'
 
 # Add conditional Playwright browser installation
 if [[ "${RAG_WEB_LOADER_ENGINE,,}" == "playwright" ]]; then

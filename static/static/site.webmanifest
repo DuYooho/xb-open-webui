@@ -1,6 +1,6 @@
 {
-  "name": "HuatuoGPT",
-  "short_name": "HuatuoGPT",
+  "name": "CSEI-GPT",
+  "short_name": "CSEI-GPT",
   "icons": [
     {
       "src": "/static/web-app-manifest-192x192.png",
