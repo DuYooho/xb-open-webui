@@ -60,9 +60,7 @@ class JupyterCodeExecuter:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.kernel_id:
             try:
-                async with self.session.delete(
-                    f"/api/kernels/{self.kernel_id}", params=self.params
-                ) as response:
+                async with self.session.delete(f"/api/kernels/{self.kernel_id}", params=self.params) as response:
                     response.raise_for_status()
             except Exception as err:
                 logger.exception("close kernel failed, %s", err)
@@ -101,9 +99,7 @@ class JupyterCodeExecuter:
             self.params.update({"token": self.token})
 
     async def init_kernel(self) -> None:
-        async with self.session.post(
-            url="/api/kernels", params=self.params
-        ) as response:
+        async with self.session.post(url="/api/kernels", params=self.params) as response:
             response.raise_for_status()
             kernel_data = await response.json()
             self.kernel_id = kernel_data["id"]
@@ -115,12 +111,7 @@ class JupyterCodeExecuter:
         ws_headers = {}
         if self.password and not self.token:
             ws_headers = {
-                "Cookie": "; ".join(
-                    [
-                        f"{cookie.key}={cookie.value}"
-                        for cookie in self.session.cookie_jar
-                    ]
-                ),
+                "Cookie": "; ".join([f"{cookie.key}={cookie.value}" for cookie in self.session.cookie_jar]),
                 **self.session.headers,
             }
         return websocket_url, ws_headers
@@ -129,9 +120,7 @@ class JupyterCodeExecuter:
         # initialize ws
         websocket_url, ws_headers = self.init_ws()
         # execute
-        async with websockets.connect(
-            websocket_url, additional_headers=ws_headers
-        ) as ws:
+        async with websockets.connect(websocket_url, additional_headers=ws_headers) as ws:
             await self.execute_in_jupyter(ws)
 
     async def execute_in_jupyter(self, ws) -> None:
@@ -203,8 +192,6 @@ class JupyterCodeExecuter:
 async def execute_code_jupyter(
     base_url: str, code: str, token: str = "", password: str = "", timeout: int = 60
 ) -> dict:
-    async with JupyterCodeExecuter(
-        base_url, code, token, password, timeout
-    ) as executor:
+    async with JupyterCodeExecuter(base_url, code, token, password, timeout) as executor:
         result = await executor.run()
         return result.model_dump()

@@ -17,9 +17,7 @@ from open_webui.utils.plugin import load_tools_module_by_id
 log = logging.getLogger(__name__)
 
 
-def apply_extra_params_to_tool_function(
-    function: Callable, extra_params: dict
-) -> Callable[..., Awaitable]:
+def apply_extra_params_to_tool_function(function: Callable, extra_params: dict) -> Callable[..., Awaitable]:
     sig = inspect.signature(function)
     extra_params = {k: v for k, v in extra_params.items() if k in sig.parameters}
     partial_func = partial(function, **extra_params)
@@ -35,9 +33,7 @@ def apply_extra_params_to_tool_function(
 
 
 # Mutation on extra_params
-def get_tools(
-    request: Request, tool_ids: list[str], user: UserModel, extra_params: dict
-) -> dict[str, dict]:
+def get_tools(request: Request, tool_ids: list[str], user: UserModel, extra_params: dict) -> dict[str, dict]:
     tools_dict = {}
 
     for tool_id in tool_ids:
@@ -69,9 +65,7 @@ def get_tools(
 
             # Remove internal parameters
             spec["parameters"]["properties"] = {
-                key: val
-                for key, val in spec["parameters"]["properties"].items()
-                if not key.startswith("__")
+                key: val for key, val in spec["parameters"]["properties"].items() if not key.startswith("__")
             }
 
             function_name = spec["name"]
@@ -203,9 +197,7 @@ def get_callable_attributes(tool: object) -> list[Callable]:
     return [
         getattr(tool, func)
         for func in dir(tool)
-        if callable(getattr(tool, func))
-        and not func.startswith("__")
-        and not inspect.isclass(getattr(tool, func))
+        if callable(getattr(tool, func)) and not func.startswith("__") and not inspect.isclass(getattr(tool, func))
     ]
 
 

@@ -159,9 +159,7 @@ class UsersTable:
         except Exception:
             return None
 
-    def get_users(
-        self, skip: Optional[int] = None, limit: Optional[int] = None
-    ) -> list[UserModel]:
+    def get_users(self, skip: Optional[int] = None, limit: Optional[int] = None) -> list[UserModel]:
         with get_db() as db:
 
             query = db.query(User).order_by(User.created_at.desc())
@@ -200,11 +198,7 @@ class UsersTable:
                 if user.settings is None:
                     return None
                 else:
-                    return (
-                        user.settings.get("ui", {})
-                        .get("notifications", {})
-                        .get("webhook_url", None)
-                    )
+                    return user.settings.get("ui", {}).get("notifications", {}).get("webhook_url", None)
         except Exception:
             return None
 
@@ -218,14 +212,10 @@ class UsersTable:
         except Exception:
             return None
 
-    def update_user_profile_image_url_by_id(
-        self, id: str, profile_image_url: str
-    ) -> Optional[UserModel]:
+    def update_user_profile_image_url_by_id(self, id: str, profile_image_url: str) -> Optional[UserModel]:
         try:
             with get_db() as db:
-                db.query(User).filter_by(id=id).update(
-                    {"profile_image_url": profile_image_url}
-                )
+                db.query(User).filter_by(id=id).update({"profile_image_url": profile_image_url})
                 db.commit()
 
                 user = db.query(User).filter_by(id=id).first()
@@ -236,9 +226,7 @@ class UsersTable:
     def update_user_last_active_by_id(self, id: str) -> Optional[UserModel]:
         try:
             with get_db() as db:
-                db.query(User).filter_by(id=id).update(
-                    {"last_active_at": int(time.time())}
-                )
+                db.query(User).filter_by(id=id).update({"last_active_at": int(time.time())})
                 db.commit()
 
                 user = db.query(User).filter_by(id=id).first()
@@ -246,9 +234,7 @@ class UsersTable:
         except Exception:
             return None
 
-    def update_user_oauth_sub_by_id(
-        self, id: str, oauth_sub: str
-    ) -> Optional[UserModel]:
+    def update_user_oauth_sub_by_id(self, id: str, oauth_sub: str) -> Optional[UserModel]:
         try:
             with get_db() as db:
                 db.query(User).filter_by(id=id).update({"oauth_sub": oauth_sub})

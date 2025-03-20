@@ -32,16 +32,12 @@ def apply_model_system_prompt_to_body(
 
     system = prompt_template(system, **template_params)
 
-    form_data["messages"] = add_or_update_system_message(
-        system, form_data.get("messages", [])
-    )
+    form_data["messages"] = add_or_update_system_message(system, form_data.get("messages", []))
     return form_data
 
 
 # inplace function: form_data is modified
-def apply_model_params_to_body(
-    params: dict, form_data: dict, mappings: dict[str, Callable]
-) -> dict:
+def apply_model_params_to_body(params: dict, form_data: dict, mappings: dict[str, Callable]) -> dict:
     if not params:
         return form_data
 
@@ -142,9 +138,7 @@ def convert_messages_openai_to_ollama(messages: list[dict]) -> list[dict]:
                     "id": tool_call.get("id", None),
                     "function": {
                         "name": tool_call.get("function", {}).get("name", ""),
-                        "arguments": json.loads(
-                            tool_call.get("function", {}).get("arguments", {})
-                        ),
+                        "arguments": json.loads(tool_call.get("function", {}).get("arguments", {})),
                     },
                 }
                 ollama_tool_calls.append(ollama_tool_call)
@@ -201,9 +195,7 @@ def convert_payload_openai_to_ollama(openai_payload: dict) -> dict:
 
     # Mapping basic model and message details
     ollama_payload["model"] = openai_payload.get("model")
-    ollama_payload["messages"] = convert_messages_openai_to_ollama(
-        openai_payload.get("messages")
-    )
+    ollama_payload["messages"] = convert_messages_openai_to_ollama(openai_payload.get("messages"))
     ollama_payload["stream"] = openai_payload.get("stream", False)
 
     if "tools" in openai_payload:
@@ -220,16 +212,12 @@ def convert_payload_openai_to_ollama(openai_payload: dict) -> dict:
         # Re-Mapping OpenAI's `max_tokens` -> Ollama's `num_predict`
         if "max_tokens" in ollama_options:
             ollama_options["num_predict"] = ollama_options["max_tokens"]
-            del ollama_options[
-                "max_tokens"
-            ]  # To prevent Ollama warning of invalid option provided
+            del ollama_options["max_tokens"]  # To prevent Ollama warning of invalid option provided
 
         # Ollama lacks a "system" prompt option. It has to be provided as a direct parameter, so we copy it down.
         if "system" in ollama_options:
             ollama_payload["system"] = ollama_options["system"]
-            del ollama_options[
-                "system"
-            ]  # To prevent Ollama warning of invalid option provided
+            del ollama_options["system"]  # To prevent Ollama warning of invalid option provided
 
     # If there is the "stop" parameter in the openai_payload, remap it to the ollama_payload.options
     if "stop" in openai_payload:
