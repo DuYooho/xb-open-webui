@@ -108,47 +108,29 @@ DEFAULT_CONFIG = {
         "default_locale": "",
         "prompt_suggestions": [
             {
-                "title": [
-                    "Help me study",
-                    "vocabulary for a college entrance exam",
-                ],
-                "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+                "title": ["帮我学习", "医学术语"],
+                "content": "帮我学习医学术语：写一个句子让我填空，我会尝试选择正确的选项。",
             },
             {
-                "title": [
-                    "Give me ideas",
-                    "for what to do with my kids' art",
-                ],
-                "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+                "title": ["给我建议", "如何处理孩子的健康问题"],
+                "content": "我的孩子最近经常感冒，你能给我5个建议来增强他的免疫力吗？",
+            },
+            {"title": ["告诉我一个有趣的事实", "关于中医"], "content": "告诉我一个关于中医的随机有趣事实。"},
+            {
+                "title": ["展示一个代码片段", "用于健康监测应用"],
+                "content": "展示一个用于健康监测应用的代码片段，使用Python和机器学习库。",
             },
             {
-                "title": ["Tell me a fun fact", "about the Roman Empire"],
-                "content": "Tell me a random fun fact about the Roman Empire",
+                "title": ["解释疫苗接种", "如果我对免疫系统有基本了解"],
+                "content": "解释疫苗接种的机制，假设我对免疫系统有基本了解。",
             },
             {
-                "title": [
-                    "Show me a code snippet",
-                    "of a website's sticky header",
-                ],
-                "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+                "title": ["克服健康焦虑", "给我一些建议"],
+                "content": "你能先问我一些关于我健康焦虑的具体情况，然后给我一些建议来克服它吗？",
             },
             {
-                "title": [
-                    "Explain options trading",
-                    "if I'm familiar with buying and selling stocks",
-                ],
-                "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
-            },
-            {
-                "title": ["Overcome procrastination", "give me tips"],
-                "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
-            },
-            {
-                "title": [
-                    "Grammar check",
-                    "rewrite it for better readability ",
-                ],
-                "content": 'Check the following sentence for grammar and clarity: "[sentence]". Rewrite it for better readability while maintaining its original meaning.',
+                "title": ["语法检查", "重写以提高可读性"],
+                "content": "检查以下句子中的语法和清晰度：'[句子]'。重写它以提高可读性，同时保持其原意。",
             },
         ],
     },
@@ -824,31 +806,25 @@ DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "ui.prompt_suggestions",
     [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+            "title": ["帮我学习", "医学术语"],
+            "content": "帮我学习医学术语：写一个句子让我填空，我会尝试选择正确的选项。",
         },
         {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+            "title": ["给我建议", "如何处理孩子的健康问题"],
+            "content": "我的孩子最近经常感冒，你能给我 5 个建议来增强他的免疫力吗？",
+        },
+        {"title": ["告诉我一个有趣的事实", "关于中医"], "content": "告诉我一个关于中医的随机有趣事实。"},
+        {
+            "title": ["展示一个代码片段", "用于健康监测应用"],
+            "content": "展示一个用于健康监测应用的代码片段，使用 Python 和机器学习库。",
         },
         {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
+            "title": ["解释疫苗接种", "如果我对免疫系统有基本了解"],
+            "content": "解释疫苗接种的机制，假设我对免疫系统有基本了解。",
         },
         {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
-        },
-        {
-            "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
-            ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
-        },
-        {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": ["克服健康焦虑", "给我一些建议"],
+            "content": "你能先问我一些关于我健康焦虑的具体情况，然后给我一些建议来克服它吗？",
         },
     ],
 )
@@ -902,6 +878,11 @@ USER_PERMISSIONS_FEATURES_CODE_INTERPRETER = (
 )
 
 
+USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE = (
+    os.environ.get("USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE", "True").lower() == "true"
+)
+
+
 DEFAULT_USER_PERMISSIONS = {
     "workspace": {
         "models": USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS,
@@ -920,6 +901,7 @@ DEFAULT_USER_PERMISSIONS = {
         "web_search": USER_PERMISSIONS_FEATURES_WEB_SEARCH,
         "image_generation": USER_PERMISSIONS_FEATURES_IMAGE_GENERATION,
         "code_interpreter": USER_PERMISSIONS_FEATURES_CODE_INTERPRETER,
+        "knowledge_base": USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE,
     },
 }
 
@@ -1343,6 +1325,12 @@ ENABLE_CODE_INTERPRETER = PersistentConfig(
     "ENABLE_CODE_INTERPRETER",
     "code_interpreter.enable",
     os.environ.get("ENABLE_CODE_INTERPRETER", "True").lower() == "true",
+)
+
+ENABLE_KNOWLEDGE_BASE = PersistentConfig(
+    "ENABLE_KNOWLEDGE_BASE",
+    "knowledge_base.enable",
+    os.environ.get("ENABLE_KNOWLEDGE_BASE", "True").lower() == "true",
 )
 
 CODE_INTERPRETER_ENGINE = PersistentConfig(

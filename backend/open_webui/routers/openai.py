@@ -25,6 +25,7 @@ from open_webui.env import (
     AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST,
     ENABLE_FORWARD_USER_INFO_HEADERS,
     BYPASS_MODEL_ACCESS_CONTROL,
+    GUEST_ENABLE_MODEL,
 )
 from open_webui.models.users import UserModel
 
@@ -578,7 +579,10 @@ async def generate_chat_completion(
                     detail="Model not found",
                 )
     elif not bypass_filter:
-        if user.role != "admin":
+        if GUEST_ENABLE_MODEL and user.name.startswith("Guest"):
+            if model_id not in GUEST_ENABLE_MODEL.split(";"):
+                raise Exception("Model not found")
+        elif user.role != "admin":
             raise HTTPException(
                 status_code=403,
                 detail="Model not found",

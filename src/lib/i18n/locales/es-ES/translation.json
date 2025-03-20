@@ -955,6 +955,7 @@
 	"Sign in": "Iniciar sesión",
 	"Sign in to {{WEBUI_NAME}}": "Iniciar sesión en {{WEBUI_NAME}}",
 	"Sign in to {{WEBUI_NAME}} with LDAP": "Iniciar sesión en {{WEBUI_NAME}} con LDAP",
+	"Sign In(authenticated)": "Iniciar sesión (autenticado)",
 	"Sign Out": "Cerrar sesión",
 	"Sign up": "Crear una cuenta",
 	"Sign up to {{WEBUI_NAME}}": "Crear una cuenta en {{WEBUI_NAME}}",

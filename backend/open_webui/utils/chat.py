@@ -52,7 +52,7 @@ from open_webui.utils.filter import (
     process_filter_functions,
 )
 
-from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL, BYPASS_MODEL_ACCESS_CONTROL
+from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL, BYPASS_MODEL_ACCESS_CONTROL, GUEST_ENABLE_MODEL
 
 
 logging.basicConfig(stream=sys.stdout, level=GLOBAL_LOG_LEVEL)
@@ -190,7 +190,10 @@ async def generate_chat_completion(
         return await generate_direct_chat_completion(request, form_data, user=user, models=models)
     else:
         # Check if user has access to the model
-        if not bypass_filter and user.role == "user":
+        if GUEST_ENABLE_MODEL and user.name.startswith("Guest"):
+            if model_id not in GUEST_ENABLE_MODEL.split(";"):
+                raise Exception("Model not found")
+        elif not bypass_filter and user.role == "user":
             try:
                 check_model_access(user, model)
             except Exception as e:

@@ -28,6 +28,7 @@ from open_webui.env import (
     WEBUI_AUTH_COOKIE_SAME_SITE,
     WEBUI_AUTH_COOKIE_SECURE,
     SRC_LOG_LEVELS,
+    ENABLE_AUTO_AUTH,
 )
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse, Response
@@ -301,9 +302,22 @@ async def ldap_auth(request: Request, response: Response, form_data: LdapForm):
 
 @router.post("/signin", response_model=SessionUserResponse)
 async def signin(request: Request, response: Response, form_data: SigninForm):
-    if WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
+    # 添加调试日志
+    log.info(f"Request headers: {dict(request.headers)}")
+    log.info(f"ENABLE_AUTO_AUTH: {ENABLE_AUTO_AUTH}")
+    log.info(f"WEBUI_AUTH_TRUSTED_EMAIL_HEADER: {WEBUI_AUTH_TRUSTED_EMAIL_HEADER}")
+
+    if (
+        ENABLE_AUTO_AUTH == True
+        and (WEBUI_AUTH_TRUSTED_EMAIL_HEADER and WEBUI_AUTH_TRUSTED_EMAIL_HEADER in request.headers)
+        and not form_data.email
+        and not form_data.password
+    ):
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
+
+        if Users.get_num_users() == 0:
+            raise HTTPException(512, detail=ERROR_MESSAGES.ADMIN_NOT_EXIST)
 
         trusted_email = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER].lower()
         trusted_name = trusted_email
@@ -315,10 +329,11 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
                 response,
                 SignupForm(email=trusted_email, password=str(uuid.uuid4()), name=trusted_name),
             )
-        user = Auths.authenticate_user_by_trusted_header(trusted_email)
+        user = Auths.authenticate_user_by_trusted_header(request)
+
     elif WEBUI_AUTH == False:
         admin_email = "admin@localhost"
-        admin_password = "admin"
+        admin_password = "admin123"
 
         if Users.get_user_by_email(admin_email.lower()):
             user = Auths.authenticate_user(admin_email.lower(), admin_password)
@@ -333,6 +348,7 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
             )
 
             user = Auths.authenticate_user(admin_email.lower(), admin_password)
+
     else:
         user = Auths.authenticate_user(form_data.email.lower(), form_data.password)
 
@@ -402,9 +418,9 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
     try:
         role = "admin" if user_count == 0 else request.app.state.config.DEFAULT_USER_ROLE
 
-        if user_count == 0:
-            # Disable signup after the first user is created
-            request.app.state.config.ENABLE_SIGNUP = False
+        # if user_count == 0:
+        #     # Disable signup after the first user is created
+        #     request.app.state.config.ENABLE_SIGNUP = False
 
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(

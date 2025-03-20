@@ -103,9 +103,9 @@ for source in log_sources:
 log.setLevel(SRC_LOG_LEVELS["CONFIG"])
 
 
-WEBUI_NAME = os.environ.get("WEBUI_NAME", "Open WebUI")
-# if WEBUI_NAME != "Open WebUI":
-#     WEBUI_NAME += " (Open WebUI)"
+WEBUI_NAME = os.environ.get("WEBUI_NAME", "CSEI-GPT")
+if WEBUI_NAME != "CSEI-GPT":
+    WEBUI_NAME += " (CSEI-GPT)"
 
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
@@ -330,6 +330,10 @@ WEBUI_AUTH_TRUSTED_EMAIL_HEADER = os.environ.get("WEBUI_AUTH_TRUSTED_EMAIL_HEADE
 WEBUI_AUTH_TRUSTED_NAME_HEADER = os.environ.get("WEBUI_AUTH_TRUSTED_NAME_HEADER", None)
 
 BYPASS_MODEL_ACCESS_CONTROL = os.environ.get("BYPASS_MODEL_ACCESS_CONTROL", "False").lower() == "true"
+
+# 访客模式配置（访客可使用的模型）
+GUEST_ENABLE_MODEL = os.environ.get("GUEST_ENABLE_MODEL", "")
+ENABLE_AUTO_AUTH = os.environ.get("ENABLE_AUTO_AUTH", "True").lower() == "true"
 
 ####################################
 # WEBUI_SECRET_KEY

@@ -73,13 +73,16 @@
 	export let imageGenerationEnabled = false;
 	export let webSearchEnabled = false;
 	export let codeInterpreterEnabled = false;
+	export let knowledgeBaseEnabled = false;
 
 	$: onChange({
 		prompt,
 		files,
 		selectedToolIds,
 		imageGenerationEnabled,
-		webSearchEnabled
+		webSearchEnabled,
+		codeInterpreterEnabled,
+		knowledgeBaseEnabled
 	});
 
 	let loaded = false;
@@ -381,7 +384,7 @@
 				</div>
 
 				<div class="w-full relative">
-					{#if atSelectedModel !== undefined || selectedToolIds.length > 0 || webSearchEnabled || ($settings?.webSearch ?? false) === 'always' || imageGenerationEnabled || codeInterpreterEnabled}
+					{#if atSelectedModel !== undefined || selectedToolIds.length > 0 || webSearchEnabled || ($settings?.webSearch ?? false) === 'always' || imageGenerationEnabled || codeInterpreterEnabled || knowledgeBaseEnabled}
 						<div
 							class="px-3 pb-0.5 pt-1.5 text-left w-full flex flex-col absolute bottom-0 left-0 right-0 bg-linear-to-t from-white dark:from-gray-900 z-10"
 						>
@@ -461,6 +464,22 @@
 											</span>
 										</div>
 										<div class=" translate-y-[0.5px]">{$i18n.t('Execute code for analysis')}</div>
+									</div>
+								</div>
+							{/if}
+
+							{#if knowledgeBaseEnabled}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-purple-500" />
+											</span>
+										</div>
+										<div class=" translate-y-[0.5px]">{$i18n.t('Search knowledge base')}</div>
 									</div>
 								</div>
 							{/if}
@@ -668,7 +687,7 @@
 									</div>
 								{/if}
 
-								<div class="px-2.5">
+								<div class="px-2.5 min-h-[80px]">
 									{#if $settings?.richTextInput ?? true}
 										<div
 											class="scrollbar-hidden text-left bg-transparent dark:text-gray-100 outline-hidden w-full pt-3 px-1 resize-none h-fit max-h-80 overflow-auto"
@@ -1222,6 +1241,35 @@
 															<span
 																class="hidden @sm:block whitespace-nowrap overflow-hidden text-ellipsis translate-y-[0.5px] mr-0.5"
 																>{$i18n.t('Code Interpreter')}</span
+															>
+														</button>
+													</Tooltip>
+												{/if}
+												<!-- MARK调试 -->
+												{#if $config?.features?.enable_knowledge_base && ($_user.role === 'admin' || $_user?.permissions?.features?.knowledge_base)}
+												<!-- {#if true} -->
+													<Tooltip content={$i18n.t('Search knowledge base')} placement="top">
+														<button
+															on:click|preventDefault={() =>
+																(knowledgeBaseEnabled = !knowledgeBaseEnabled)}
+															type="button"
+															class="px-1.5 @sm:px-2.5 py-1.5 flex gap-1.5 items-center text-sm rounded-full font-medium transition-colors duration-300 focus:outline-hidden max-w-full overflow-hidden {knowledgeBaseEnabled
+																? 'bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400'
+																: 'bg-transparent text-gray-600 dark:text-gray-300 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 '}"
+														>
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																viewBox="0 0 24 24"
+																fill="none"
+																stroke="currentColor"
+																stroke-width="1.75"
+																class="size-5"
+															>
+																<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+															</svg>
+															<span
+																class="hidden @sm:block whitespace-nowrap overflow-hidden text-ellipsis translate-y-[0.5px] mr-0.5"
+																>{$i18n.t('Knowledge Base')}</span
 															>
 														</button>
 													</Tooltip>

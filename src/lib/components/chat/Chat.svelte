@@ -119,6 +119,7 @@
 	let imageGenerationEnabled = false;
 	let webSearchEnabled = false;
 	let codeInterpreterEnabled = false;
+	let knowledgeBaseEnabled = false;
 	let chat = null;
 	let tags = [];
 
@@ -1575,6 +1576,11 @@
 						($user.role === 'admin' || $user?.permissions?.features?.code_interpreter)
 							? codeInterpreterEnabled
 							: false,
+					knowledge_base:
+						$config?.features?.enable_knowledge_base &&
+						($user.role in ['admin', 'user'] || $user?.permissions?.features?.knowledge_base)
+							? knowledgeBaseEnabled
+							: false,
 					web_search:
 						$config?.features?.enable_web_search &&
 						($user.role === 'admin' || $user?.permissions?.features?.web_search)
@@ -2029,6 +2035,7 @@
 								bind:selectedToolIds
 								bind:imageGenerationEnabled
 								bind:codeInterpreterEnabled
+								bind:knowledgeBaseEnabled
 								bind:webSearchEnabled
 								bind:atSelectedModel
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
@@ -2081,8 +2088,8 @@
 								bind:selectedToolIds
 								bind:imageGenerationEnabled
 								bind:codeInterpreterEnabled
+								bind:knowledgeBaseEnabled
 								bind:webSearchEnabled
-								bind:atSelectedModel
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
 								{stopResponse}
 								{createMessagePair}
