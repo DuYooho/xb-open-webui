@@ -39,7 +39,7 @@ class Pipe:
     class Valves(BaseModel):
         # 环境变量的设置
         DIFY_BASE_URL: str = Field(default="http://58.241.42.210:1880/v1")
-        DIFY_KEY: str = Field(default="app-B3o9VA7QEjXwecbbHerI7me3")
+        DIFY_KEY: str = Field(default="app-h1PIb67KUgvnUYboWMCi4zUB")
         FILE_SERVER: str = Field(default="")
 
     def __init__(self):
@@ -90,9 +90,7 @@ class Pipe:
         os.makedirs(self.data_cache_dir, exist_ok=True)
 
         # chat_message_mapping.json
-        chat_mapping_file = os.path.join(
-            self.data_cache_dir, "chat_message_mapping.json"
-        )
+        chat_mapping_file = os.path.join(self.data_cache_dir, "chat_message_mapping.json")
         with open(chat_mapping_file, "w", encoding="utf-8") as f:
             json.dump(self.chat_message_mapping, f, ensure_ascii=False, indent=2)
 
@@ -110,9 +108,7 @@ class Pipe:
         """从文件加载Dify相关的状态变量"""
         try:
             # chat_message_mapping.json
-            chat_mapping_file = os.path.join(
-                self.data_cache_dir, "chat_message_mapping.json"
-            )
+            chat_mapping_file = os.path.join(self.data_cache_dir, "chat_message_mapping.json")
             if os.path.exists(chat_mapping_file):
                 with open(chat_mapping_file, "r", encoding="utf-8") as f:
                     self.chat_message_mapping = json.load(f)
@@ -148,8 +144,8 @@ class Pipe:
         """
 
         return [
-            {"id": "csei-GPT", "name": "csei-GPT"},
-            {"id": "csei-GPT-R1", "name": "csei-GPT-R1"},
+            {"id": "qwen2.5-7b", "name": "csei-GPT"},
+            {"id": "deepseek-r1:32b", "name": "csei-GPT-R1"},
         ]
 
     def upload_file(self, user_id: str, file_path: str, mime_type: str) -> str:
@@ -257,9 +253,7 @@ class Pipe:
             new_content = f"#{filename}\n{content}"
 
             # 创建临时文件
-            with tempfile.NamedTemporaryFile(
-                delete=False, suffix=".txt", mode="w", encoding="utf-8"
-            ) as tmp_file:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8") as tmp_file:
                 tmp_file.write(new_content)
                 temp_file_path = tmp_file.name
 
@@ -370,9 +364,7 @@ class Pipe:
                     parent_message_id = list(previous_msg.values())[0]
 
                     # 关键修改：截断当前位置之后的消息历史
-                    self.chat_message_mapping[chat_id]["messages"] = chat_history[
-                        :current_msg_index
-                    ]
+                    self.chat_message_mapping[chat_id]["messages"] = chat_history[:current_msg_index]
 
         # 获取最后一条消息作为query
         message = messages[-1]
@@ -389,9 +381,7 @@ class Pipe:
                 if item["type"] == "text":
                     query += item["text"]
                 if item["type"] == "image_url":
-                    upload_file_id = self.upload_images(
-                        item["image_url"]["url"], current_user
-                    )
+                    upload_file_id = self.upload_images(item["image_url"]["url"], current_user)
                     upload_file_dict = {
                         "type": "image",
                         "transfer_method": "local_file",
@@ -409,10 +399,7 @@ class Pipe:
                     continue
 
                 file_id = file["id"]
-                if (
-                    chat_id in self.dify_file_list
-                    and file_id in self.dify_file_list[chat_id]
-                ):
+                if chat_id in self.dify_file_list and file_id in self.dify_file_list[chat_id]:
                     file_list.append(self.dify_file_list[chat_id][file_id])
                     continue
 
@@ -430,31 +417,17 @@ class Pipe:
 
                 # 处理不同类型的文件
                 if self.is_doc_file(file_path):
-                    upload_file_id = self.upload_file(
-                        current_user, file_path, file_mime_type
-                    )
-                    upload_file_dict.update(
-                        {"type": "document", "upload_file_id": upload_file_id}
-                    )
+                    upload_file_id = self.upload_file(current_user, file_path, file_mime_type)
+                    upload_file_dict.update({"type": "document", "upload_file_id": upload_file_id})
                 elif self.is_text_file(file_mime_type):
                     upload_file_id = self.upload_text_file(current_user, file_path)
-                    upload_file_dict.update(
-                        {"type": "document", "upload_file_id": upload_file_id}
-                    )
+                    upload_file_dict.update({"type": "document", "upload_file_id": upload_file_id})
                 elif self.is_audio_file(file_path):
-                    upload_file_id = self.upload_file(
-                        current_user, file_path, file_mime_type
-                    )
-                    upload_file_dict.update(
-                        {"type": "audio", "upload_file_id": upload_file_id}
-                    )
+                    upload_file_id = self.upload_file(current_user, file_path, file_mime_type)
+                    upload_file_dict.update({"type": "audio", "upload_file_id": upload_file_id})
                 elif self.is_video_file(file_path):
-                    upload_file_id = self.upload_file(
-                        current_user, file_path, file_mime_type
-                    )
-                    upload_file_dict.update(
-                        {"type": "video", "upload_file_id": upload_file_id}
-                    )
+                    upload_file_id = self.upload_file(current_user, file_path, file_mime_type)
+                    upload_file_dict.update({"type": "video", "upload_file_id": upload_file_id})
                 else:
                     raise ValueError(f"Unsupported file type: {file_path}")
 
@@ -469,9 +442,7 @@ class Pipe:
             "parent_message_id": parent_message_id,
             "query": query,
             "response_mode": "streaming" if body.get("stream", False) else "blocking",
-            "conversation_id": self.chat_message_mapping[chat_id].get(
-                "dify_conversation_id", ""
-            ),
+            "conversation_id": self.chat_message_mapping[chat_id].get("dify_conversation_id", ""),
             "user": current_user,
             "files": file_list,
         }
@@ -488,9 +459,7 @@ class Pipe:
             if body.get("stream", False):
                 return self.stream_response(url, headers, payload, chat_id, message_id)
             else:
-                return self.non_stream_response(
-                    url, headers, payload, chat_id, message_id
-                )
+                return self.non_stream_response(url, headers, payload, chat_id, message_id)
         except requests.exceptions.RequestException as e:
             print(f"Request failed: {e}")
             return f"Error: Request failed: {e}"
@@ -501,13 +470,9 @@ class Pipe:
     def stream_response(self, url, headers, payload, chat_id, message_id):
         """处理流式响应"""
         try:
-            with requests.post(
-                url, headers=headers, json=payload, stream=True, timeout=(3.05, 60)
-            ) as response:
+            with requests.post(url, headers=headers, json=payload, stream=True, timeout=(3.05, 60)) as response:
                 if response.status_code != 200:
-                    raise Exception(
-                        f"HTTP Error {response.status_code}: {response.text}"
-                    )
+                    raise Exception(f"HTTP Error {response.status_code}: {response.text}")
 
                 for line in response.iter_lines():
                     if line:
@@ -525,24 +490,20 @@ class Pipe:
                                     pass
                                 elif event == "message_end":
                                     # 保存会话和消息ID映射
-                                    dify_conversation_id = data.get(
-                                        "conversation_id", ""
-                                    )
+                                    dify_conversation_id = data.get("conversation_id", "")
                                     dify_message_id = data.get("message_id", "")
 
-                                    self.chat_message_mapping[chat_id][
-                                        "dify_conversation_id"
-                                    ] = dify_conversation_id
-                                    self.chat_message_mapping[chat_id][
-                                        "messages"
-                                    ].append({message_id: dify_message_id})
+                                    self.chat_message_mapping[chat_id]["dify_conversation_id"] = dify_conversation_id
+                                    self.chat_message_mapping[chat_id]["messages"].append({message_id: dify_message_id})
 
                                     # 保存状态
                                     self.save_state()
                                     break
                                 elif event == "error":
                                     # 处理错误
-                                    error_msg = f"Error {data.get('status')}: {data.get('message')} ({data.get('code')})"
+                                    error_msg = (
+                                        f"Error {data.get('status')}: {data.get('message')} ({data.get('code')})"
+                                    )
                                     yield f"Error: {error_msg}"
                                     break
 
@@ -562,9 +523,7 @@ class Pipe:
     def non_stream_response(self, url, headers, payload, chat_id, message_id):
         """处理非流式响应"""
         try:
-            response = requests.post(
-                url, headers=headers, json=payload, timeout=(3.05, 60)
-            )
+            response = requests.post(url, headers=headers, json=payload, timeout=(3.05, 60))
             if response.status_code != 200:
                 raise Exception(f"HTTP Error {response.status_code}: {response.text}")
 
@@ -574,12 +533,8 @@ class Pipe:
             dify_conversation_id = res.get("conversation_id", "")
             dify_message_id = res.get("message_id", "")
 
-            self.chat_message_mapping[chat_id][
-                "dify_conversation_id"
-            ] = dify_conversation_id
-            self.chat_message_mapping[chat_id]["messages"].append(
-                {message_id: dify_message_id}
-            )
+            self.chat_message_mapping[chat_id]["dify_conversation_id"] = dify_conversation_id
+            self.chat_message_mapping[chat_id]["messages"].append({message_id: dify_message_id})
 
             # 保存状态
             self.save_state()

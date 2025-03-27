@@ -1333,6 +1333,7 @@ async def process_chat_response(request, response, form_data, user, metadata, mo
             DETECT_CODE_INTERPRETER = metadata.get("features", {}).get("code_interpreter", False)
 
             reasoning_tags = [
+                ("details", "/details"),
                 ("think", "/think"),
                 ("thinking", "/thinking"),
                 ("reason", "/reason"),

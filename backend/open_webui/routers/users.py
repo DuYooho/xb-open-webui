@@ -69,8 +69,8 @@ class WorkspacePermissions(BaseModel):
 
 
 class ChatPermissions(BaseModel):
-    controls: bool = True
-    file_upload: bool = True
+    controls: bool = False
+    file_upload: bool = False
     delete: bool = True
     edit: bool = True
     temporary: bool = True

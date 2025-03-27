@@ -4,11 +4,14 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR" || exit
 export HF_ENDPOINT=https://hf-mirror.com
 export PORT=12138
-export OPENAI_API_BASE_URL='https://api.ai-gaochao.cn/v1'
-export OPENAI_API_KEY='sk-EbmyJfdUsVcRqqFL5687643852Fc4002A9Da92D385CeA460'
-# anon2010   1234qwer
+export ENABLE_OPENAI_API=false
+export OPENAI_API_BASE_URL=''
+export OPENAI_API_KEY=''
+# Davis Davis@example.com Davis
 export CORS_ALLOW_ORIGIN='http://localhost:5173;http://localhost:18080;http://localhost:12138;http://10.20.12.36:5173;http://10.20.12.36:18080;http://10.20.12.36:12138'
 
+export ENABLE_CODE_EXECUTION=false
+export ENABLE_CODE_INTERPRETER=false
 # export CUSTOM_NAME="CSEI-GPT"
 export WEBUI_NAME="CSEI-GPT"
 

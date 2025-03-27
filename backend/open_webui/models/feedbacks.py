@@ -1,7 +1,7 @@
 import logging
 import time
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from open_webui.internal.db import Base, get_db
 from open_webui.models.chats import Chats
@@ -67,6 +67,7 @@ class RatingData(BaseModel):
     model_id: Optional[str] = None
     sibling_model_ids: Optional[list[str]] = None
     reason: Optional[str] = None
+    reasons: Optional[List[str]] = None
     comment: Optional[str] = None
     model_config = ConfigDict(extra="allow", protected_namespaces=())
 
