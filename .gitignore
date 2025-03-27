@@ -309,3 +309,4 @@ cypress/screenshots
 .vscode/settings.json
 .vscode/*
 .cursor/*
+special_equipment*

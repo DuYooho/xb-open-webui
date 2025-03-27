@@ -3,12 +3,13 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR" || exit
 export HF_ENDPOINT=https://hf-mirror.com
-export PORT=12138
+export PORT=18080
 export ENABLE_OPENAI_API=false
 export OPENAI_API_BASE_URL=''
 export OPENAI_API_KEY=''
-# Davis Davis@example.com Davis
-export CORS_ALLOW_ORIGIN='http://localhost:5173;http://localhost:18080;http://localhost:12138;http://10.20.12.36:5173;http://10.20.12.36:18080;http://10.20.12.36:12138'
+# admin admin@example.com admin
+#export CORS_ALLOW_ORIGIN='http://localhost:5173;http://localhost:18080;http://localhost:12138;http://10.20.12.36:5173;http://10.20.12.36:18080;http://10.20.12.36:12138'
+export CORS_ALLOW_ORIGIN='*'
 
 export ENABLE_CODE_EXECUTION=false
 export ENABLE_CODE_INTERPRETER=false
