@@ -104,8 +104,8 @@ log.setLevel(SRC_LOG_LEVELS["CONFIG"])
 
 
 WEBUI_NAME = os.environ.get("WEBUI_NAME", "CSEI-GPT")
-if WEBUI_NAME != "CSEI-GPT":
-    WEBUI_NAME += " (CSEI-GPT)"
+# if WEBUI_NAME != "CSEI-GPT":
+#     WEBUI_NAME += " (CSEI-GPT)"
 
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
