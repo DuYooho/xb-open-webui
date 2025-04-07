@@ -7,6 +7,8 @@ from functools import lru_cache
 from pathlib import Path
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+import soundfile as sf
+import numpy as np
 
 import aiohttp
 import aiofiles
@@ -82,6 +84,24 @@ def is_mp4_audio(file_path):
     ):
         return True
     return False
+
+
+def fresh_wav_file(file_path, output_path):
+    """将WAV音频文件转换为MP3格式。"""
+    audio = AudioSegment.from_file(file_path)
+    # 转换为numpy数组
+    samples = np.array(audio.get_array_of_samples())
+
+    # 如果是立体声，需要将其转换为单声道
+    if audio.channels == 2:
+        samples = samples.reshape((-1, 2))
+        samples = samples.mean(axis=1)
+
+    # 确保数组是一维的
+    samples = np.ravel(samples)
+    sf.write(output_path, samples, audio.frame_rate)
+
+
 
 
 def convert_mp4_to_wav(file_path, output_path):
@@ -464,7 +484,72 @@ async def speech(request: Request, user=Depends(get_verified_user)):
             await f.write(json.dumps(payload))
 
         return FileResponse(file_path)
+    
+    elif request.app.state.config.TTS_ENGINE == "fishspeech":
+        try:
+            timeout = aiohttp.ClientTimeout(total=AIOHTTP_CLIENT_TIMEOUT)
+            async with aiohttp.ClientSession(
+                timeout=timeout, trust_env=True
+            ) as session:
+                async with session.post(
+                    url=f"{request.app.state.config.TTS_OPENAI_API_BASE_URL}/tts",
+                    json={
+                        "text": payload["input"],
+                        "chunk_length": 200,
+                        "format": "mp3",
+                        "references": [],
+                        "reference_id": request.app.state.config.TTS_VOICE,
+                        "seed": None,
+                        "use_memory_cache": "on",
+                        "normalize": True,
+                        "streaming": False,
+                        "max_new_tokens": 1024,
+                        "top_p": 0.7,
+                        "repetition_penalty": 1.2,
+                        "temperature": 0.7
+                    },
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {request.app.state.config.TTS_API_KEY}",
+                        **(
+                            {
+                                "X-OpenWebUI-User-Name": user.name,
+                                "X-OpenWebUI-User-Id": user.id,
+                                "X-OpenWebUI-User-Email": user.email,
+                                "X-OpenWebUI-User-Role": user.role,
+                            }
+                            if ENABLE_FORWARD_USER_INFO_HEADERS
+                            else {}
+                        ),
+                    },
+                ) as r:
+                    r.raise_for_status()
 
+                    async with aiofiles.open(file_path, "wb") as f:
+                        await f.write(await r.read())
+
+                    async with aiofiles.open(file_body_path, "w") as f:
+                        await f.write(json.dumps(payload))
+
+            return FileResponse(file_path)
+
+        except Exception as e:
+            log.exception(e)
+            detail = None
+
+            try:
+                if r.status != 200:
+                    res = await r.json()
+
+                    if "error" in res:
+                        detail = f"External: {res['error'].get('message', '')}"
+            except Exception:
+                detail = f"External: {e}"
+
+            raise HTTPException(
+                status_code=getattr(r, "status", 500),
+                detail=detail if detail else "Open WebUI: Server Connection Error",
+            )
 
 def transcribe(request: Request, file_path):
     log.info(f"transcribe: {file_path}")
@@ -495,6 +580,7 @@ def transcribe(request: Request, file_path):
 
         log.debug(data)
         return data
+    
     elif request.app.state.config.STT_ENGINE == "openai":
         if is_mp4_audio(file_path):
             os.rename(file_path, file_path.replace(".wav", ".mp4"))
@@ -502,6 +588,9 @@ def transcribe(request: Request, file_path):
             convert_mp4_to_wav(file_path.replace(".wav", ".mp4"), file_path)
 
         r = None
+        # 尝试修复soundfile无法识别音频的问题
+        fresh_wav_file(file_path, file_path)
+
         try:
             r = requests.post(
                 url=f"{request.app.state.config.STT_OPENAI_API_BASE_URL}/audio/transcriptions",
@@ -509,7 +598,7 @@ def transcribe(request: Request, file_path):
                     "Authorization": f"Bearer {request.app.state.config.STT_OPENAI_API_KEY}"
                 },
                 files={"file": (filename, open(file_path, "rb"))},
-                data={"model": request.app.state.config.STT_MODEL},
+                data={"model": request.app.state.config.STT_MODEL,"language": "zh"},
             )
 
             r.raise_for_status()
