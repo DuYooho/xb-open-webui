@@ -5,6 +5,14 @@
 	import { pickAndDownloadFile } from '$lib/utils/onedrive-file-picker';
 
 	import { onMount, tick, getContext, createEventDispatcher, onDestroy } from 'svelte';
+	import { getMedicalServiceUrl, MEDICAL_ROUTES } from '$lib/utils/url';
+
+	// 处理跳转
+	const handleNavigation = (path: string) => {
+		const baseUrl = getMedicalServiceUrl();
+		window.open(`${baseUrl}${path}`, '_blank');
+	};
+
 	const dispatch = createEventDispatcher();
 
 	import {
@@ -1422,17 +1430,16 @@
         <div class="flex justify-center gap-3">
             <button
                 class="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
-                on:click={() => window.location.href = '/your-link'}
+                on:click={() => handleNavigation(MEDICAL_ROUTES.RECORD_CONTROL)}
             >
                 病历质控
             </button>
             <button
                 class="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
-                on:click={() => window.location.href = '/your-link'}
+                on:click={() => handleNavigation(MEDICAL_ROUTES.RECORD_GENERATOR)}
             >
-                病历生成助手
+                预问诊与病历生成
             </button>
-
         </div>
     </div>
 </div>
