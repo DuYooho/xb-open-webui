@@ -1,0 +1,53 @@
+{
+  "name": "poc-front-end",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@vue/compiler-sfc": "^3.2.13",
+    "@vue/runtime-dom": "^3.2.13",
+    "axios": "^1.8.4",
+    "core-js": "^3.8.3",
+    "dify-client-plus": "file:dify-client-plus-main",
+    "element-plus": "^2.9.7",
+    "highlight.js": "^10.7.3",
+    "marked": "^4.3.0",
+    "pinia": "^2.0.0",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.0",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "mockjs": "^1.1.0",
+    "sass": "^1.86.3",
+    "vite": "^4.0.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

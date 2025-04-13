@@ -1412,3 +1412,27 @@
 		</div>
 	</div>
 {/if}
+
+<!-- 添加快捷操作按钮组 -->
+<div 
+    class="w-full bg-transparent mt-4" 
+    class:hidden={createMessagesList(history, history.currentId).length > 0}
+>
+    <div class="{($settings?.widescreenMode ?? null) ? 'max-w-full' : 'max-w-6xl'} px-2.5 mx-auto">
+        <div class="flex justify-center gap-3">
+            <button
+                class="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                on:click={() => window.location.href = '/your-link'}
+            >
+                病历质控
+            </button>
+            <button
+                class="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                on:click={() => window.location.href = '/your-link'}
+            >
+                病历生成助手
+            </button>
+
+        </div>
+    </div>
+</div>
