@@ -6,6 +6,7 @@ services:
     
     ports:
       - 12138:12138
+      - 12139:12139
     volumes:
       - /Users/zhangzhiyi/develop/github/open-webui/nginx_for_test_env/nginx.conf:/etc/nginx/nginx.conf:ro
-    
+      - /Users/zhangzhiyi/develop/github/open-webui/poc-front-end/dist:/etc/nginx/html/poc-front-end/dist
