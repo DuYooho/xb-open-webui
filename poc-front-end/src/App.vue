@@ -4,7 +4,7 @@
     <header class="app-header">
       <div class="header-content">
         <div class="left">
-          <h1 class="logo">医疗Agent展示平台</h1>
+          <h1 class="logo">医疗Agent插件库</h1>
           <nav class="main-nav">
             <router-link to="/" class="nav-item">首页</router-link>
             <router-link to="/medical-record" class="nav-item">病历质控</router-link>
