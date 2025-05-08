@@ -1,7 +1,8 @@
 """
-title:接入特种设备的dify流程
-
-version: 0.0.1
+title:接入特种设备的dify流程，2025-04-02，包含Qwen2.5-7B-Instruct，DeepSeek-R1-Distill-Qwen-32B，以及finetuned Qwen2.5-7B-Instruct
+http://58.241.42.210:1880/app/e603d143-1110-42b2-a94f-b3ebc9cefab1/workflow  # [dev] 特种设备V1.4
+重新排版，包含多轮对话功能
+version: V1.4
 description: 该流程用于DIFY的API接口，用于与DIFY的API进行交互
 """
 
@@ -38,8 +39,8 @@ def get_closure_info(func):
 class Pipe:
     class Valves(BaseModel):
         # 环境变量的设置
-        DIFY_BASE_URL: str = Field(default="http://58.241.42.210:1880/v1")
-        DIFY_KEY: str = Field(default="app-h1PIb67KUgvnUYboWMCi4zUB")
+        DIFY_BASE_URL: str = Field(default="http://192.168.94.187:1880/v1")
+        DIFY_KEY: str = Field(default="app-RL8mMNyjjeR02CedYsERzLYx")
         FILE_SERVER: str = Field(default="")
 
     def __init__(self):
@@ -144,8 +145,9 @@ class Pipe:
         """
 
         return [
-            {"id": "qwen2.5-7b", "name": "csei-GPT"},
-            {"id": "deepseek-r1:32b", "name": "csei-GPT-R1"},
+            {"id": "qwen2.5-7b", "name": "SE-GPT-7B"},
+            {"id": "qwen2.5-7b-finetuned", "name": "SE-GPT-7B-Finetuned"},
+            {"id": "deepseek-r1:32b", "name": "SE-GPT-R1-32B"},
         ]
 
     def upload_file(self, user_id: str, file_path: str, mime_type: str) -> str:

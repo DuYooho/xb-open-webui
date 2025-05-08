@@ -330,7 +330,7 @@ from open_webui.env import (
     BYPASS_MODEL_ACCESS_CONTROL,
     RESET_CONFIG_ON_START,
     OFFLINE_MODE,
-    GUEST_ENABLE_MODEL
+    GUEST_ENABLE_MODEL,
 )
 
 
@@ -428,16 +428,15 @@ app.state.WEBUI_NAME = WEBUI_NAME
 app.state.LICENSE_METADATA = None
 
 
-
-import debugpy
-
-# # # 设置调试服务器的监听地址和端口
-debugpy.listen(("0.0.0.0", 5678))
-
-print("Waiting for debugger attach...")
-# 等待调试器附加
-debugpy.wait_for_client()
-print("Debugger attached")
+# import debugpy
+#
+# # # # 设置调试服务器的监听地址和端口
+# debugpy.listen(("0.0.0.0", 5678))
+#
+# print("Waiting for debugger attach...")
+# # 等待调试器附加
+# debugpy.wait_for_client()
+# print("Debugger attached")
 
 ########################################
 #
@@ -484,9 +483,7 @@ app.state.config.ENABLE_SIGNUP = ENABLE_SIGNUP
 app.state.config.ENABLE_LOGIN_FORM = ENABLE_LOGIN_FORM
 
 app.state.config.ENABLE_API_KEY = ENABLE_API_KEY
-app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS = (
-    ENABLE_API_KEY_ENDPOINT_RESTRICTIONS
-)
+app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS = ENABLE_API_KEY_ENDPOINT_RESTRICTIONS
 app.state.config.API_KEY_ALLOWED_ENDPOINTS = API_KEY_ALLOWED_ENDPOINTS
 
 app.state.config.JWT_EXPIRES_IN = JWT_EXPIRES_IN
@@ -559,9 +556,7 @@ app.state.config.FILE_MAX_COUNT = RAG_FILE_MAX_COUNT
 app.state.config.RAG_FULL_CONTEXT = RAG_FULL_CONTEXT
 app.state.config.BYPASS_EMBEDDING_AND_RETRIEVAL = BYPASS_EMBEDDING_AND_RETRIEVAL
 app.state.config.ENABLE_RAG_HYBRID_SEARCH = ENABLE_RAG_HYBRID_SEARCH
-app.state.config.ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = (
-    ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION
-)
+app.state.config.ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION
 
 app.state.config.CONTENT_EXTRACTION_ENGINE = CONTENT_EXTRACTION_ENGINE
 app.state.config.TIKA_SERVER_URL = TIKA_SERVER_URL
@@ -594,9 +589,7 @@ app.state.config.YOUTUBE_LOADER_PROXY_URL = YOUTUBE_LOADER_PROXY_URL
 
 app.state.config.ENABLE_RAG_WEB_SEARCH = ENABLE_RAG_WEB_SEARCH
 app.state.config.RAG_WEB_SEARCH_ENGINE = RAG_WEB_SEARCH_ENGINE
-app.state.config.BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL = (
-    BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL
-)
+app.state.config.BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL = BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL
 app.state.config.RAG_WEB_SEARCH_DOMAIN_FILTER_LIST = RAG_WEB_SEARCH_DOMAIN_FILTER_LIST
 
 app.state.config.ENABLE_GOOGLE_DRIVE_INTEGRATION = ENABLE_GOOGLE_DRIVE_INTEGRATION
@@ -682,9 +675,7 @@ app.state.config.CODE_EXECUTION_ENGINE = CODE_EXECUTION_ENGINE
 app.state.config.CODE_EXECUTION_JUPYTER_URL = CODE_EXECUTION_JUPYTER_URL
 app.state.config.CODE_EXECUTION_JUPYTER_AUTH = CODE_EXECUTION_JUPYTER_AUTH
 app.state.config.CODE_EXECUTION_JUPYTER_AUTH_TOKEN = CODE_EXECUTION_JUPYTER_AUTH_TOKEN
-app.state.config.CODE_EXECUTION_JUPYTER_AUTH_PASSWORD = (
-    CODE_EXECUTION_JUPYTER_AUTH_PASSWORD
-)
+app.state.config.CODE_EXECUTION_JUPYTER_AUTH_PASSWORD = CODE_EXECUTION_JUPYTER_AUTH_PASSWORD
 app.state.config.CODE_EXECUTION_JUPYTER_TIMEOUT = CODE_EXECUTION_JUPYTER_TIMEOUT
 
 app.state.config.ENABLE_CODE_INTERPRETER = ENABLE_CODE_INTERPRETER
@@ -694,12 +685,8 @@ app.state.config.CODE_INTERPRETER_PROMPT_TEMPLATE = CODE_INTERPRETER_PROMPT_TEMP
 
 app.state.config.CODE_INTERPRETER_JUPYTER_URL = CODE_INTERPRETER_JUPYTER_URL
 app.state.config.CODE_INTERPRETER_JUPYTER_AUTH = CODE_INTERPRETER_JUPYTER_AUTH
-app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_TOKEN = (
-    CODE_INTERPRETER_JUPYTER_AUTH_TOKEN
-)
-app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD = (
-    CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD
-)
+app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_TOKEN = CODE_INTERPRETER_JUPYTER_AUTH_TOKEN
+app.state.config.CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD = CODE_INTERPRETER_JUPYTER_AUTH_PASSWORD
 app.state.config.CODE_INTERPRETER_JUPYTER_TIMEOUT = CODE_INTERPRETER_JUPYTER_TIMEOUT
 
 ########################################
@@ -786,20 +773,12 @@ app.state.config.ENABLE_TITLE_GENERATION = ENABLE_TITLE_GENERATION
 
 app.state.config.TITLE_GENERATION_PROMPT_TEMPLATE = TITLE_GENERATION_PROMPT_TEMPLATE
 app.state.config.TAGS_GENERATION_PROMPT_TEMPLATE = TAGS_GENERATION_PROMPT_TEMPLATE
-app.state.config.IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE = (
-    IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE
-)
+app.state.config.IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE = IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE
 
-app.state.config.TOOLS_FUNCTION_CALLING_PROMPT_TEMPLATE = (
-    TOOLS_FUNCTION_CALLING_PROMPT_TEMPLATE
-)
+app.state.config.TOOLS_FUNCTION_CALLING_PROMPT_TEMPLATE = TOOLS_FUNCTION_CALLING_PROMPT_TEMPLATE
 app.state.config.QUERY_GENERATION_PROMPT_TEMPLATE = QUERY_GENERATION_PROMPT_TEMPLATE
-app.state.config.AUTOCOMPLETE_GENERATION_PROMPT_TEMPLATE = (
-    AUTOCOMPLETE_GENERATION_PROMPT_TEMPLATE
-)
-app.state.config.AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH = (
-    AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH
-)
+app.state.config.AUTOCOMPLETE_GENERATION_PROMPT_TEMPLATE = AUTOCOMPLETE_GENERATION_PROMPT_TEMPLATE
+app.state.config.AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH = AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH
 
 
 ########################################
@@ -855,10 +834,7 @@ async def check_url(request: Request, call_next):
 
 @app.middleware("http")
 async def inspect_websocket(request: Request, call_next):
-    if (
-        "/ws/socket.io" in request.url.path
-        and request.query_params.get("transport") == "websocket"
-    ):
+    if "/ws/socket.io" in request.url.path and request.query_params.get("transport") == "websocket":
         upgrade = (request.headers.get("Upgrade") or "").lower()
         connection = (request.headers.get("Connection") or "").lower().split(",")
         # Check that there's the correct headers for an upgrade, else reject the connection
@@ -870,6 +846,7 @@ async def inspect_websocket(request: Request, call_next):
             )
     return await call_next(request)
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ALLOW_ORIGIN,
@@ -877,9 +854,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-print('#' * 100)
+print("#" * 100)
 print(CORS_ALLOW_ORIGIN)
-print('#' * 100)
+print("#" * 100)
 
 app.mount("/ws", socket_app)
 
@@ -914,9 +891,7 @@ app.include_router(folders.router, prefix="/api/v1/folders", tags=["folders"])
 app.include_router(groups.router, prefix="/api/v1/groups", tags=["groups"])
 app.include_router(files.router, prefix="/api/v1/files", tags=["files"])
 app.include_router(functions.router, prefix="/api/v1/functions", tags=["functions"])
-app.include_router(
-    evaluations.router, prefix="/api/v1/evaluations", tags=["evaluations"]
-)
+app.include_router(evaluations.router, prefix="/api/v1/evaluations", tags=["evaluations"])
 app.include_router(utils.router, prefix="/api/v1/utils", tags=["utils"])
 
 
@@ -949,9 +924,7 @@ async def get_models(request: Request, user=Depends(get_verified_user)):
                 if has_access(
                     user.id,
                     type="read",
-                    access_control=model.get("info", {})
-                    .get("meta", {})
-                    .get("access_control", {}),
+                    access_control=model.get("info", {}).get("meta", {}).get("access_control", {}),
                 ):
                     filtered_models.append(model)
                 continue
@@ -968,24 +941,17 @@ async def get_models(request: Request, user=Depends(get_verified_user)):
     models = await get_all_models(request, user=user)
 
     # Filter out filter pipelines
-    models = [
-        model
-        for model in models
-        if "pipeline" not in model or model["pipeline"].get("type", None) != "filter"
-    ]
+    models = [model for model in models if "pipeline" not in model or model["pipeline"].get("type", None) != "filter"]
 
     model_order_list = request.app.state.config.MODEL_ORDER_LIST
     if model_order_list:
         model_order_dict = {model_id: i for i, model_id in enumerate(model_order_list)}
         # Sort models by order list priority, with fallback for those not in the list
-        models.sort(
-            key=lambda x: (model_order_dict.get(x["id"], float("inf")), x["name"])
-        )
-    
+        models.sort(key=lambda x: (model_order_dict.get(x["id"], float("inf")), x["name"]))
 
-    if GUEST_ENABLE_MODEL and user.name.startswith('Guest'):
-        guest_can_use_models = GUEST_ENABLE_MODEL.split(';')
-        models = [model for model in models if model['id'] in guest_can_use_models]
+    if GUEST_ENABLE_MODEL and user.name.startswith("Guest"):
+        guest_can_use_models = GUEST_ENABLE_MODEL.split(";")
+        models = [model for model in models if model["id"] in guest_can_use_models]
 
     elif user.role == "user" and not BYPASS_MODEL_ACCESS_CONTROL:
         models = get_filtered_models(models, user)
@@ -1025,8 +991,8 @@ async def chat_completion(
 
             # Check if user has access to the model
 
-            if GUEST_ENABLE_MODEL and user.name.startswith('Guest'):
-                if model_id not in GUEST_ENABLE_MODEL.split(';'):
+            if GUEST_ENABLE_MODEL and user.name.startswith("Guest"):
+                if model_id not in GUEST_ENABLE_MODEL.split(";"):
                     raise Exception("Model not found")
             elif not BYPASS_MODEL_ACCESS_CONTROL and user.role == "user":
                 try:
@@ -1054,11 +1020,7 @@ async def chat_completion(
             **(
                 {"function_calling": "native"}
                 if form_data.get("params", {}).get("function_calling") == "native"
-                or (
-                    model_info
-                    and model_info.params.model_dump().get("function_calling")
-                    == "native"
-                )
+                or (model_info and model_info.params.model_dump().get("function_calling") == "native")
                 else {}
             ),
         }
@@ -1066,9 +1028,7 @@ async def chat_completion(
         request.state.metadata = metadata
         form_data["metadata"] = metadata
 
-        form_data, metadata, events = await process_chat_payload(
-            request, form_data, user, metadata, model
-        )
+        form_data, metadata, events = await process_chat_payload(request, form_data, user, metadata, model)
 
     except Exception as e:
         log.debug(f"Error processing chat payload: {e}")
@@ -1080,9 +1040,7 @@ async def chat_completion(
     try:
         response = await chat_completion_handler(request, form_data, user)
 
-        return await process_chat_response(
-            request, response, form_data, user, metadata, model, events, tasks
-        )
+        return await process_chat_response(request, response, form_data, user, metadata, model, events, tasks)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -1096,9 +1054,7 @@ generate_chat_completion = chat_completion
 
 
 @app.post("/api/chat/completed")
-async def chat_completed(
-    request: Request, form_data: dict, user=Depends(get_verified_user)
-):
+async def chat_completed(request: Request, form_data: dict, user=Depends(get_verified_user)):
     try:
         model_item = form_data.pop("model_item", {})
 
@@ -1115,9 +1071,7 @@ async def chat_completed(
 
 
 @app.post("/api/chat/actions/{action_id}")
-async def chat_action(
-    request: Request, action_id: str, form_data: dict, user=Depends(get_verified_user)
-):
+async def chat_action(request: Request, action_id: str, form_data: dict, user=Depends(get_verified_user)):
     try:
         model_item = form_data.pop("model_item", {})
 
@@ -1182,12 +1136,7 @@ async def get_app_config(request: Request):
         "name": app.state.WEBUI_NAME,
         "version": VERSION,
         "default_locale": str(DEFAULT_LOCALE),
-        "oauth": {
-            "providers": {
-                name: config.get("name", name)
-                for name, config in OAUTH_PROVIDERS.items()
-            }
-        },
+        "oauth": {"providers": {name: config.get("name", name) for name, config in OAUTH_PROVIDERS.items()}},
         "features": {
             "auth": WEBUI_AUTH,
             "auth_trusted_header": bool(app.state.AUTH_TRUSTED_EMAIL_HEADER),
@@ -1288,16 +1237,12 @@ async def get_app_version():
 @app.get("/api/version/updates")
 async def get_app_latest_release_version(user=Depends(get_verified_user)):
     if OFFLINE_MODE:
-        log.debug(
-            f"Offline mode is enabled, returning current version as latest version"
-        )
+        log.debug(f"Offline mode is enabled, returning current version as latest version")
         return {"current": VERSION, "latest": VERSION}
     try:
         timeout = aiohttp.ClientTimeout(total=1)
         async with aiohttp.ClientSession(timeout=timeout, trust_env=True) as session:
-            async with session.get(
-                "https://api.github.com/repos/open-webui/open-webui/releases/latest"
-            ) as response:
+            async with session.get("https://api.github.com/repos/open-webui/open-webui/releases/latest") as response:
                 response.raise_for_status()
                 data = await response.json()
                 latest_version = data["tag_name"]
@@ -1400,6 +1345,7 @@ async def healthcheck_with_db():
 class CORSStaticFiles(StaticFiles):
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] == "http":
+
             async def cors_send(message):
                 if message["type"] == "http.response.start":
                     headers = dict(message.get("headers", []))
@@ -1408,6 +1354,7 @@ class CORSStaticFiles(StaticFiles):
                     headers[b"access-control-allow-headers"] = b"*"
                     message["headers"] = [(k, v) for k, v in headers.items()]
                 await send(message)
+
             await super().__call__(scope, receive, cors_send)
         else:
             await super().__call__(scope, receive, send)
@@ -1437,6 +1384,4 @@ if os.path.exists(FRONTEND_BUILD_DIR):
         name="spa-static-files",
     )
 else:
-    log.warning(
-        f"Frontend build directory not found at '{FRONTEND_BUILD_DIR}'. Serving API only."
-    )
+    log.warning(f"Frontend build directory not found at '{FRONTEND_BUILD_DIR}'. Serving API only.")

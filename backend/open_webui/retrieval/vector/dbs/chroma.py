@@ -32,9 +32,7 @@ class ChromaClient:
         if CHROMA_CLIENT_AUTH_PROVIDER is not None:
             settings_dict["chroma_client_auth_provider"] = CHROMA_CLIENT_AUTH_PROVIDER
         if CHROMA_CLIENT_AUTH_CREDENTIALS is not None:
-            settings_dict["chroma_client_auth_credentials"] = (
-                CHROMA_CLIENT_AUTH_CREDENTIALS
-            )
+            settings_dict["chroma_client_auth_credentials"] = CHROMA_CLIENT_AUTH_CREDENTIALS
 
         if CHROMA_HTTP_HOST != "":
             self.client = chromadb.HttpClient(
@@ -63,9 +61,7 @@ class ChromaClient:
         # Delete the collection based on the collection name.
         return self.client.delete_collection(name=collection_name)
 
-    def search(
-        self, collection_name: str, vectors: list[list[float | int]], limit: int
-    ) -> Optional[SearchResult]:
+    def search(self, collection_name: str, vectors: list[list[float | int]], limit: int) -> Optional[SearchResult]:
         # Search for the nearest neighbor items based on the vectors and return 'limit' number of results.
         try:
             collection = self.client.get_collection(name=collection_name)
@@ -87,9 +83,7 @@ class ChromaClient:
         except Exception as e:
             return None
 
-    def query(
-        self, collection_name: str, filter: dict, limit: Optional[int] = None
-    ) -> Optional[GetResult]:
+    def query(self, collection_name: str, filter: dict, limit: Optional[int] = None) -> Optional[GetResult]:
         # Query the items from the collection based on the filter.
         try:
             collection = self.client.get_collection(name=collection_name)
@@ -126,9 +120,7 @@ class ChromaClient:
 
     def insert(self, collection_name: str, items: list[VectorItem]):
         # Insert the items into the collection, if the collection does not exist, it will be created.
-        collection = self.client.get_or_create_collection(
-            name=collection_name, metadata={"hnsw:space": "cosine"}
-        )
+        collection = self.client.get_or_create_collection(name=collection_name, metadata={"hnsw:space": "cosine"})
 
         ids = [item["id"] for item in items]
         documents = [item["text"] for item in items]
@@ -146,18 +138,14 @@ class ChromaClient:
 
     def upsert(self, collection_name: str, items: list[VectorItem]):
         # Update the items in the collection, if the items are not present, insert them. If the collection does not exist, it will be created.
-        collection = self.client.get_or_create_collection(
-            name=collection_name, metadata={"hnsw:space": "cosine"}
-        )
+        collection = self.client.get_or_create_collection(name=collection_name, metadata={"hnsw:space": "cosine"})
 
         ids = [item["id"] for item in items]
         documents = [item["text"] for item in items]
         embeddings = [item["vector"] for item in items]
         metadatas = [item["metadata"] for item in items]
 
-        collection.upsert(
-            ids=ids, documents=documents, embeddings=embeddings, metadatas=metadatas
-        )
+        collection.upsert(ids=ids, documents=documents, embeddings=embeddings, metadatas=metadatas)
 
     def delete(
         self,

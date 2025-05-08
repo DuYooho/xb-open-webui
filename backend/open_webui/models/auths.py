@@ -10,9 +10,10 @@ from open_webui.env import SRC_LOG_LEVELS
 from pydantic import BaseModel
 from sqlalchemy import Boolean, Column, String, Text
 from open_webui.utils.auth import verify_password
-from open_webui.env import SRC_LOG_LEVELS,ENABLE_AUTO_AUTH,WEBUI_SECRET_KEY
+from open_webui.env import SRC_LOG_LEVELS, ENABLE_AUTO_AUTH, WEBUI_SECRET_KEY
 from fastapi import Request, HTTPException, status
 from open_webui.utils.misc import parse_duration
+
 log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["MODELS"])
 
@@ -21,9 +22,6 @@ log.setLevel(SRC_LOG_LEVELS["MODELS"])
 ####################
 SESSION_SECRET = WEBUI_SECRET_KEY
 ALGORITHM = "HS256"
-
-
-
 
 
 ####################
@@ -123,15 +121,11 @@ class AuthsTable:
 
             id = str(uuid.uuid4())
 
-            auth = AuthModel(
-                **{"id": id, "email": email, "password": password, "active": True}
-            )
+            auth = AuthModel(**{"id": id, "email": email, "password": password, "active": True})
             result = Auth(**auth.model_dump())
             db.add(result)
 
-            user = Users.insert_new_user(
-                id, name, email, profile_image_url, role, oauth_sub
-            )
+            user = Users.insert_new_user(id, name, email, profile_image_url, role, oauth_sub)
 
             db.commit()
             db.refresh(result)
@@ -168,21 +162,21 @@ class AuthsTable:
             return user if user else None
         except Exception:
             return False
-    
+
     # Other Code
     def auto_auth(self, request: Request):
         log.debug("Starting auto auth process")
-        
+
         random_id = str(uuid.uuid4())[:8]
         auto_email = f"auto_user_{random_id}@auto.local"
         # 访客模式
         auto_name = f"Guest {random_id}"
-        
+
         auto_password = str(uuid.uuid4())
 
         try:
             log.info(f"Creating auto user with email: {auto_email}")
-            
+
             user = self.insert_new_auth(
                 email=auto_email,
                 password=auto_password,
@@ -198,7 +192,7 @@ class AuthsTable:
                 )
 
             log.info(f"Successfully created auto user with ID: {user.id}")
-            
+
             def create_token(data: dict, expires_delta: Union[timedelta, None] = None) -> str:
                 payload = data.copy()
 
@@ -208,6 +202,7 @@ class AuthsTable:
 
                 encoded_jwt = jwt.encode(payload, SESSION_SECRET, algorithm=ALGORITHM)
                 return encoded_jwt
+
             token = create_token(
                 data={"id": user.id},
                 expires_delta=parse_duration("-1"),
@@ -246,15 +241,13 @@ class AuthsTable:
             if auth_result and auth_result["status"]:
                 user = Users.get_user_by_id(auth_result["user"]["id"])
                 log.info(f"Created new auto user: {user.id}")
-                return user        
-        return None    
+                return user
+        return None
 
     def update_user_password_by_id(self, id: str, new_password: str) -> bool:
         try:
             with get_db() as db:
-                result = (
-                    db.query(Auth).filter_by(id=id).update({"password": new_password})
-                )
+                result = db.query(Auth).filter_by(id=id).update({"password": new_password})
                 db.commit()
                 return True if result == 1 else False
         except Exception:
