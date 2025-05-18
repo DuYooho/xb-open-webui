@@ -881,6 +881,17 @@ USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE = (
     os.environ.get("USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE", "True").lower() == "true"
 )
 
+# MARK 添加TAG
+USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH = (
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH", "True").lower()
+    == "true"
+)
+
+USER_PERMISSIONS_FEATURES_DEEP_RESEARCH = (
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_RESEARCH", "True").lower()
+    == "true"
+)
+
 
 DEFAULT_USER_PERMISSIONS = {
     "workspace": {
@@ -896,11 +907,14 @@ DEFAULT_USER_PERMISSIONS = {
         "edit": USER_PERMISSIONS_CHAT_EDIT,
         "temporary": USER_PERMISSIONS_CHAT_TEMPORARY,
     },
+    # MARK 添加TAG
     "features": {
         "web_search": USER_PERMISSIONS_FEATURES_WEB_SEARCH,
         "image_generation": USER_PERMISSIONS_FEATURES_IMAGE_GENERATION,
         "code_interpreter": USER_PERMISSIONS_FEATURES_CODE_INTERPRETER,
         "knowledge_base": USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE,
+        "deep_web_search": USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH,
+        "deep_research": USER_PERMISSIONS_FEATURES_DEEP_RESEARCH,
     },
 }
 
@@ -1331,6 +1345,22 @@ ENABLE_KNOWLEDGE_BASE = PersistentConfig(
     "knowledge_base.enable",
     os.environ.get("ENABLE_KNOWLEDGE_BASE", "True").lower() == "true",
 )
+
+ENABLE_DEEP_WEB_SEARCH = PersistentConfig(
+    "ENABLE_DEEP_WEB_SEARCH",
+    "deep_web_search.enable",
+    os.environ.get("ENABLE_DEEP_WEB_SEARCH", "True").lower() == "true",
+)
+
+
+ENABLE_DEEP_RESEARCH = PersistentConfig(
+    "ENABLE_DEEP_RESEARCH",
+    "deep_research.enable",
+    os.environ.get("ENABLE_DEEP_RESEARCH", "True").lower() == "true",
+)
+
+
+
 
 CODE_INTERPRETER_ENGINE = PersistentConfig(
     "CODE_INTERPRETER_ENGINE",
