@@ -37,6 +37,8 @@
 	export let imageGenerationEnabled = false;
 	export let codeInterpreterEnabled = false;
 	export let knowledgeBaseEnabled = false;
+	export let deepWebSearchEnabled = false;
+	export let deepResearchEnabled = false;
 	export let webSearchEnabled = false;
 
 	let models = [];
@@ -197,6 +199,8 @@
 					bind:imageGenerationEnabled
 					bind:codeInterpreterEnabled
 					bind:knowledgeBaseEnabled
+					bind:deepWebSearchEnabled
+					bind:deepResearchEnabled
 					bind:webSearchEnabled
 					bind:atSelectedModel
 					{transparentBackground}

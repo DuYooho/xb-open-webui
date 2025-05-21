@@ -119,7 +119,10 @@
 	let imageGenerationEnabled = false;
 	let webSearchEnabled = false;
 	let codeInterpreterEnabled = false;
+	// MARK 添加TAG
 	let knowledgeBaseEnabled = false;
+	let deepWebSearchEnabled = false;
+	let deepResearchEnabled = false;
 	let chat = null;
 	let tags = [];
 
@@ -1576,10 +1579,21 @@
 						($user.role === 'admin' || $user?.permissions?.features?.code_interpreter)
 							? codeInterpreterEnabled
 							: false,
+					// MARK 添加TAG
 					knowledge_base:
 						$config?.features?.enable_knowledge_base &&
 						($user.role in ['admin', 'user'] || $user?.permissions?.features?.knowledge_base)
 							? knowledgeBaseEnabled
+							: false,
+					deep_web_search:
+						$config?.features?.enable_deep_web_search &&
+						($user.role in ['admin', 'user'] || $user?.permissions?.features?.deep_web_search)
+							? deepWebSearchEnabled
+							: false,
+					deep_research:
+						$config?.features?.enable_deep_research &&
+						($user.role in ['admin', 'user'] || $user?.permissions?.features?.deep_research)
+							? deepResearchEnabled
 							: false,
 					web_search:
 						$config?.features?.enable_web_search &&
@@ -2024,7 +2038,7 @@
 								/>
 							</div>
 						</div>
-
+						<!-- MARK 添加TAG -->
 						<div class=" pb-[1rem]">
 							<MessageInput
 								{history}
@@ -2036,6 +2050,8 @@
 								bind:imageGenerationEnabled
 								bind:codeInterpreterEnabled
 								bind:knowledgeBaseEnabled
+								bind:deepWebSearchEnabled
+								bind:deepResearchEnabled
 								bind:webSearchEnabled
 								bind:atSelectedModel
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
@@ -2078,6 +2094,7 @@
 							</div>
 						</div>
 					{:else}
+						<!-- MARK 添加TAG -->
 						<div class="overflow-auto w-full h-full flex items-center">
 							<Placeholder
 								{history}
@@ -2089,6 +2106,8 @@
 								bind:imageGenerationEnabled
 								bind:codeInterpreterEnabled
 								bind:knowledgeBaseEnabled
+								bind:deepWebSearchEnabled
+								bind:deepResearchEnabled
 								bind:webSearchEnabled
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
 								{stopResponse}

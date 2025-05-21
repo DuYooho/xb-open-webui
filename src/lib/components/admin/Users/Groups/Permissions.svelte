@@ -20,11 +20,14 @@
 			temporary: true,
 			file_upload: true
 		},
+		// MARK 添加TAG
 		features: {
 			web_search: true,
 			image_generation: true,
 			code_interpreter: true,
-			knowledge_base: true
+			knowledge_base: true,
+			deep_web_search: true,
+			deep_research: true
 		}
 	};
 
@@ -174,6 +177,23 @@
 			</div>
 
 			<Switch bind:state={permissions.features.knowledge_base} />
+		</div>
+
+		<!-- MARK 添加TAG -->
+		<div class="  flex w-full justify-between my-2 pr-2">
+			<div class=" self-center text-xs font-medium">
+				{$i18n.t('Deep Web Search')}
+			</div>
+
+			<Switch bind:state={permissions.features.deep_web_search} />
+		</div>
+
+		<div class="  flex w-full justify-between my-2 pr-2">
+			<div class=" self-center text-xs font-medium">
+				{$i18n.t('Deep Research')}
+			</div>
+
+			<Switch bind:state={permissions.features.deep_research} />
 		</div>
 	</div>
 </div>
