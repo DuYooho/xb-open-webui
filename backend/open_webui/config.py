@@ -108,28 +108,24 @@ DEFAULT_CONFIG = {
         "default_locale": "",
         "prompt_suggestions": [
             {
-                "title": ["询问特种设备", "关于特种设备"],
-                "content": "什么是特种设备？",
+                "title": ["问答题", "关于压力容器焊接规程"],
+                "content": "焊接材料都包括什么？",
             },
             {
-                "title": ["给我建议", "提高工作效率"],
-                "content": "有哪5个基于证据的策略可以帮助我在家工作时提高工作效率？",
+                "title": ["问答题", "询问承压设备实施导则"],
+                "content": "RBI中的风险分析有哪几种类型？",
             },
             {
-                "title": ["告诉我一个有趣的事实", "关于人工智能"],
-                "content": "告诉我一个关于人工智能历史的随机有趣事实。",
+                "title": ["多选题", "特种设备使用管理规则"],
+                "content": "《特种设备使用管理规则》(TSG 08-2017)规定,特种设备安全管理负责人的职责有（ ）。\n\n选项：\nA: 协助主要负责人履行本单位特种设备安全的领导职责,确保本单位特种设备安全使用\nB: 组织制定本单位特种设备安全管理制度,落实特种设备安全管理机构设置、安全管理人员配备\nC: 组织进行隐患排查,并且提出处理意见\nD: 对安全管理人员报告的存在事故隐患设备应当停止使用时,立即做出停止使用特种设备的决定,并且及时报告本单位主要负责人",
             },
             {
-                "title": ["解释一个概念", "机器学习基础"],
-                "content": "解释神经网络是如何工作的，假设我有基本的数学知识。",
+                "title": ["判断题", "询问气瓶检验人员证书换证"],
+                "content": "气瓶检验人员证书超期未换的恢复方式是原证书逾期不满5年的，可以按照TSG Z8002—2022的4.2和4.3的规定申请参加原持证级别与项目的考试换证。原证书逾期5年以上的，应当按照TSG Z8002—2022的3.2和3.3的规定重新申请原持证级别与项目检验人员取证。",
             },
             {
-                "title": ["帮我头脑风暴", "项目创意"],
-                "content": "你能问我一些关于我的兴趣和技能的问题，然后建议一些我可以开发的编程项目吗？",
-            },
-            {
-                "title": ["语法检查", "改进我的写作"],
-                "content": "检查以下句子的语法和清晰度：'[句子]'。重写它以提高可读性，同时保持其原意。",
+                "title": ["填空题", "询问电梯监督检验"],
+                "content": "根据TSG T 7001-2023 电梯监督检验和定期检验规则，对于自动扶梯出入口防护装置应至少高出扶手带（A）。位于扶手带外缘（B）处；从楼层板起高度不小于（C）。",
             },
         ],
     },
@@ -883,13 +879,11 @@ USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE = (
 
 # MARK 添加TAG
 USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH", "True").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH", "True").lower() == "true"
 )
 
 USER_PERMISSIONS_FEATURES_DEEP_RESEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_RESEARCH", "True").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_RESEARCH", "True").lower() == "true"
 )
 
 
@@ -1358,8 +1352,6 @@ ENABLE_DEEP_RESEARCH = PersistentConfig(
     "deep_research.enable",
     os.environ.get("ENABLE_DEEP_RESEARCH", "True").lower() == "true",
 )
-
-
 
 
 CODE_INTERPRETER_ENGINE = PersistentConfig(
