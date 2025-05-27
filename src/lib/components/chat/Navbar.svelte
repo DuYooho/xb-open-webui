@@ -26,6 +26,7 @@
 	import AdjustmentsHorizontal from '../icons/AdjustmentsHorizontal.svelte';
 
 	import PencilSquare from '../icons/PencilSquare.svelte';
+	import { WEBUI_BASE_URL } from '$lib/constants';
 
 	const i18n = getContext('i18n');
 
@@ -92,27 +93,27 @@
 							showDownloadChatModal = !showDownloadChatModal;
 						}}
 					>
-						<button
-							class="flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
-							id="chat-context-menu-button"
-						>
-							<div class=" m-auto self-center">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="size-5"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-									/>
-								</svg>
-							</div>
-						</button>
+<!--						<button-->
+<!--							class="flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"-->
+<!--							id="chat-context-menu-button"-->
+<!--						>-->
+<!--							<div class=" m-auto self-center">-->
+<!--								<svg-->
+<!--									xmlns="http://www.w3.org/2000/svg"-->
+<!--									fill="none"-->
+<!--									viewBox="0 0 24 24"-->
+<!--									stroke-width="1.5"-->
+<!--									stroke="currentColor"-->
+<!--									class="size-5"-->
+<!--								>-->
+<!--									<path-->
+<!--										stroke-linecap="round"-->
+<!--										stroke-linejoin="round"-->
+<!--										d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"-->
+<!--									/>-->
+<!--								</svg>-->
+<!--							</div>-->
+<!--						</button>-->
 					</Menu>
 				{:else if $mobile && ($user.role === 'admin' || $user?.permissions?.chat?.controls)}
 					<Tooltip content={$i18n.t('Controls')}>
@@ -146,22 +147,33 @@
 					</Tooltip>
 				{/if}
 
-				<Tooltip content={$i18n.t('New Chat')}>
-					<button
-						id="new-chat-button"
-						class=" flex {$showSidebar
-							? 'md:hidden'
-							: ''} cursor-pointer px-2 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850 transition"
-						on:click={() => {
-							initNewChat();
-						}}
-						aria-label="New Chat"
-					>
-						<div class=" m-auto self-center">
-							<PencilSquare className=" size-5" strokeWidth="2" />
-						</div>
-					</button>
-				</Tooltip>
+				{#if !$showSidebar}
+					<Tooltip content={$i18n.t('New Chat')}>
+						<button
+							id="new-chat-button"
+							class="flex items-center rounded-lg px-2 py-1 h-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer"
+							on:click={() => {
+								initNewChat();
+							}}
+							aria-label="New Chat"
+						>
+							<div class="self-center mx-1.5">
+								<img
+									crossorigin="anonymous"
+									src="{WEBUI_BASE_URL}/static/favicon.png"
+									class="size-5 -translate-x-1.5 rounded-full"
+									alt="logo"
+								/>
+							</div>
+							<div class="self-center font-medium text-sm text-gray-850 dark:text-white font-primary">
+								{$i18n.t('New Chat')}
+							</div>
+							<div class="ml-3">
+								<PencilSquare className="size-5" strokeWidth="2" />
+							</div>
+						</button>
+					</Tooltip>
+				{/if}
 
 				{#if $user !== undefined}
 					<UserMenu

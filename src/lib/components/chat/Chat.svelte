@@ -120,7 +120,7 @@
 	let webSearchEnabled = false;
 	let codeInterpreterEnabled = false;
 	// MARK 添加TAG
-	let knowledgeBaseEnabled = false;
+	let knowledgeBaseEnabled = true;
 	let deepWebSearchEnabled = false;
 	let deepResearchEnabled = false;
 	let chat = null;
