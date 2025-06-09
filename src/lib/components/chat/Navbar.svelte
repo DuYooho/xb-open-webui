@@ -147,33 +147,33 @@
 					</Tooltip>
 				{/if}
 
-				{#if !$showSidebar}
-					<Tooltip content={$i18n.t('New Chat')}>
-						<button
-							id="new-chat-button"
-							class="flex items-center rounded-lg px-2 py-1 h-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer"
-							on:click={() => {
-								initNewChat();
-							}}
-							aria-label="New Chat"
-						>
-							<div class="self-center mx-1.5">
-								<img
-									crossorigin="anonymous"
-									src="{WEBUI_BASE_URL}/static/favicon.png"
-									class="size-5 -translate-x-1.5 rounded-full"
-									alt="logo"
-								/>
-							</div>
-							<div class="self-center font-medium text-sm text-gray-850 dark:text-white font-primary">
-								{$i18n.t('New Chat')}
-							</div>
-							<div class="ml-3">
-								<PencilSquare className="size-5" strokeWidth="2" />
-							</div>
-						</button>
-					</Tooltip>
-				{/if}
+				<Tooltip content={$i18n.t('New Chat')}>
+					<button
+						id="new-chat-button"
+						class=" flex {$showSidebar
+										? 'md:hidden'
+										: ''} cursor-pointer px-2 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850 transition"
+						on:click={() => {
+							initNewChat();
+						}}
+						aria-label="New Chat"
+					>
+						<div class="self-center mx-1.5">
+							<img
+								crossorigin="anonymous"
+								src="{WEBUI_BASE_URL}/static/favicon.png"
+								class="size-5 -translate-x-1.5 rounded-full"
+								alt="logo"
+							/>
+						</div>
+						<div class="self-center font-medium text-sm text-gray-850 dark:text-white font-primary">
+							{$i18n.t('New Chat')}
+						</div>
+						<div class="ml-3">
+							<PencilSquare className="size-5" strokeWidth="2" />
+						</div>
+					</button>
+				</Tooltip>
 
 				{#if $user !== undefined}
 					<UserMenu
