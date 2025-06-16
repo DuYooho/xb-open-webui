@@ -108,28 +108,20 @@ DEFAULT_CONFIG = {
         "default_locale": "",
         "prompt_suggestions": [
             {
-                "title": ["询问特种设备", "关于特种设备"],
-                "content": "什么是特种设备？",
+                "title": ["特种设备知识问答", "特种设备法规的介绍"],
+                "content": "制定《特种设备安全法》的主要目的是什么？",
             },
             {
-                "title": ["给我建议", "提高工作效率"],
-                "content": "有哪5个基于证据的策略可以帮助我在家工作时提高工作效率？",
+                "title": ["考试题：判断题", "特种设备法规知识判断"],
+                "content": "判断题：机械和液力传动的内燃叉车，应当配备在传动装置处于接合状态时，能防止发动机启动的装置。",
             },
             {
-                "title": ["告诉我一个有趣的事实", "关于人工智能"],
-                "content": "告诉我一个关于人工智能历史的随机有趣事实。",
+                "title": ["考试题：选择题", "特种设备检验相关考试题"],
+                "content": "某酒店一台电梯情况如下:2015年12月经安装监督检验合格，2023年8月更换不同规格主机后按照规定检验合格，根据 TSGT7001-2023的规定，下次检验年月为（） A.2024年12月 B.2024年8月 C.2025年12月 D.2025年8月",
             },
             {
-                "title": ["解释一个概念", "机器学习基础"],
-                "content": "解释神经网络是如何工作的，假设我有基本的数学知识。",
-            },
-            {
-                "title": ["帮我头脑风暴", "项目创意"],
-                "content": "你能问我一些关于我的兴趣和技能的问题，然后建议一些我可以开发的编程项目吗？",
-            },
-            {
-                "title": ["语法检查", "改进我的写作"],
-                "content": "检查以下句子的语法和清晰度：'[句子]'。重写它以提高可读性，同时保持其原意。",
+                "title": ["考试题：多选题", "特种设备无损检测考试题"],
+                "content": "多选题：从缺陷中吸附出渗透剂，在显像后显示色泽的能力和（）  A.着色染料种类无关 B.染料在渗透剂中溶解度有关 C.荧光染料种类有关 D.染料在渗透剂中溶解度无关",
             },
         ],
     },
@@ -883,13 +875,11 @@ USER_PERMISSIONS_FEATURES_KNOWLEDGE_BASE = (
 
 # MARK 添加TAG
 USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH", "True").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_WEB_SEARCH", "True").lower() == "true"
 )
 
 USER_PERMISSIONS_FEATURES_DEEP_RESEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_RESEARCH", "True").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_DEEP_RESEARCH", "True").lower() == "true"
 )
 
 
@@ -1358,8 +1348,6 @@ ENABLE_DEEP_RESEARCH = PersistentConfig(
     "deep_research.enable",
     os.environ.get("ENABLE_DEEP_RESEARCH", "True").lower() == "true",
 )
-
-
 
 
 CODE_INTERPRETER_ENGINE = PersistentConfig(
