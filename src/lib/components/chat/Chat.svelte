@@ -2057,6 +2057,7 @@
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
 								{stopResponse}
 								{createMessagePair}
+								{initNewChat}
 								onChange={(input) => {
 									if (input.prompt) {
 										localStorage.setItem(`chat-input-${$chatId}`, JSON.stringify(input));
@@ -2112,6 +2113,7 @@
 								transparentBackground={$settings?.backgroundImageUrl ?? false}
 								{stopResponse}
 								{createMessagePair}
+								{initNewChat}
 								on:upload={async (e) => {
 									const { type, data } = e.detail;
 
