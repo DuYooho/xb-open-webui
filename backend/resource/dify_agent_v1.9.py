@@ -373,8 +373,9 @@ class Pipe:
         need_rag = "[NEED_RAG]" if str(body["features"]["knowledge_base"]).lower() == "true" else ""
         web_search = "[WEB_SEARCH]" if str(body["features"]["deep_web_search"]).lower() == "true" else ""
         deep_think = "[DEEP_THINK]" if str(body["features"]["deep_research"]).lower() == "true" else ""
+        draw_up = "[DRAW_UP]" if str(body["features"]["draw_up"]).lower() == "true" else ""
         function_tag = "\n[---#function_line#---]\n"
-        inputs = {"draw_up": str(body["features"]["draw_up"]).lower()}
+        inputs = {}
         file_list = []
 
         # 处理消息内容
@@ -395,8 +396,8 @@ class Pipe:
             query = message.get("content", "")
         print(query)
         print(query)
-        if need_rag or web_search or deep_think:
-            query = need_rag + web_search + deep_think + function_tag + query
+        if need_rag or web_search or deep_think or draw_up:
+            query = need_rag + web_search + deep_think + draw_up + function_tag + query
         print(query)
         # 处理文件上传
         if "upload_files" in body:
